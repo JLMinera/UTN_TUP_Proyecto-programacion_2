@@ -1,0 +1,90 @@
+@startuml DriveHub
+
+' Clases
+
+class DriveHub {
+    - kilometrajeInicial: number
+    - kilometrajeFinal: number
+    - distanciaRecorrida: number
+
+    + getters()
+    + setters()
+    + tarifa(tarifaInicial, distancia)
+}
+
+abstract class Persona {
+    - nombre: string
+    - apellido: string
+    - dni: number
+}
+
+class Cliente {
+
+}
+
+
+abstract class Vehiculo {
+    # matricula: string
+    # estado: Estado
+    - disponible: bool
+    # tarifaBase: number
+    #kilometraje: number
+
+}
+
+class Sedan {
+
+}
+
+class Compacto {
+
+}
+
+class SUV {
+
+}
+
+interface Tarifa {
+
+}
+
+abstract class Estado {
+    - vehiculo: Vehiculo
+    - fechaInicio: number
+    - fechaFin: number
+}
+
+class Reserva {
+    - cliente: Cliente
+}
+
+class NecesitaLimpieza {
+    - distanciaRecorrida: number
+}
+
+class Mantenimiento {
+    - costo: number
+    - fecha: number
+}
+
+' Relaciones
+
+Persona <|-d- Cliente
+
+Tarifa <|.. Sedan
+Tarifa <|.. Compacto
+Tarifa <|.. SUV
+
+Vehiculo <|-d- Sedan
+Vehiculo <|-d- Compacto
+Vehiculo <|-d- SUV
+
+Vehiculo *-r- Estado
+
+Estado <|-d- Reserva
+Estado <|-d- NecesitaLimpieza
+Estado <|-d- Mantenimiento
+
+
+
+@enduml
