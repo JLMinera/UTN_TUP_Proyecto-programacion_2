@@ -2,7 +2,7 @@
 
 ' Clases
 
-class DriveHub {
+class GestorDeReserva {
     - kilometrajeInicial: number
     - kilometrajeFinal: number
     - distanciaRecorrida: number
@@ -16,6 +16,9 @@ abstract class Persona {
     - nombre: string
     - apellido: string
     - dni: number
+
+    + getters()
+    + setters()
 }
 
 class Cliente {
@@ -24,11 +27,14 @@ class Cliente {
 
 
 abstract class Vehiculo {
-    # matricula: string
-    # estado: Estado
-    - disponible: bool
-    # tarifaBase: number
+    # patente: string
     #kilometraje: number
+    # tarifaBase: number
+    - disponible: bool
+    # estado: Estado
+
+    + getters()
+    + setters()
 
 }
 
@@ -49,9 +55,11 @@ interface Tarifa {
 }
 
 abstract class Estado {
-    - vehiculo: Vehiculo
     - fechaInicio: number
     - fechaFin: number
+
+    + getters()
+    + setters()
 }
 
 class Reserva {
