@@ -4,8 +4,8 @@ export default class Mantenimiento extends Estado{
     private costo: number;
     private fecha: number;
 
-    constructor(costo:number, fecha:number, fechaIinicio:number, fechaFin:number){
-        super(fechaIinicio, fechaFin)
+    constructor(costo:number, fecha:number, fechaInicio:number, fechaFin:number){
+        super(fechaInicio, fechaFin)
         this.costo=costo;
         this.fecha=fecha;
     }
