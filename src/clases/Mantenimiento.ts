@@ -2,12 +2,10 @@ import Estado from "./Estado";
 
 export default class Mantenimiento extends Estado{
     private costo: number;
-    private fecha: number;
 
-    constructor(costo:number, fecha:number, fechaInicio:number, fechaFin:number){
+    constructor(costo:number, fechaInicio:number, fechaFin:number){
         super(fechaInicio, fechaFin)
         this.costo=costo;
-        this.fecha=fecha;
     }
 
     public setCosto(value:number){
@@ -18,12 +16,5 @@ export default class Mantenimiento extends Estado{
         return this.costo;
     }
 
-    public setFecha(value:number){
-        this.fecha=value;
-    }
-
-    public getFecha():number{
-        return this.fecha;
-    }
 
 }

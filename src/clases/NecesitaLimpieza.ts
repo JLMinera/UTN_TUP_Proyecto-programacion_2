@@ -1,7 +1,7 @@
 import Estado from "./Estado";
 
 export default class NecesitaMantenimiento extends Estado{
-    distanciaRecorrida:number;
+    private distanciaRecorrida:number;
 
     constructor(distanciaRecorrida:number, fechaInicio:number, fechaFin:number){
         super(fechaInicio, fechaFin)
@@ -10,6 +10,10 @@ export default class NecesitaMantenimiento extends Estado{
 
     public setdistanciaRecorrida(value:number){
         this.distanciaRecorrida=value;
+    }
+
+    public getdistanciaRecorrida():number{
+        return this.distanciaRecorrida;
     }
 
 }
