@@ -1,4 +1,4 @@
-import PersonaError from "../clasesDeError/personaError";
+import PersonaError from "../clasesDeError/PersonaError";
 
 export default abstract class Persona {
 
