@@ -1,4 +1,4 @@
-import Persona from "./persona";
+import Persona from "./Persona";
 
 export default class Cliente extends Persona {
 

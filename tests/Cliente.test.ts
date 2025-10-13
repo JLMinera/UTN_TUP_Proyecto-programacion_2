@@ -1,5 +1,5 @@
 import Cliente from "../src/clases/Cliente"
-import PersonaError from "../src/clasesDeError/personaError";
+import PersonaError from "../src/clasesDeError/PersonaError";
 
 describe("Test Cliente", () => {
 
