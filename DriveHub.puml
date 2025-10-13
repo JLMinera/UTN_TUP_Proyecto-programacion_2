@@ -76,6 +76,10 @@ class Mantenimiento {
     
 }
 
+class Disponible {
+    
+}
+
 ' Relaciones
 
 Persona <|-d- Cliente
@@ -96,6 +100,7 @@ Estado *-r- Vehiculo
 Estado <|-d- Reserva
 Estado <|-d- NecesitaLimpieza
 Estado <|-d- Mantenimiento
+Estado <|-d- Disponible
 
 
 
