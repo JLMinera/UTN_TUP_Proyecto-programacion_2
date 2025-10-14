@@ -1,26 +1,33 @@
+import Vehiculo from "./Vehiculo";
+
 export default abstract class Estado {
 
-    protected fechaInicio: number;
-    protected fechaFin: number;
+    protected vehiculos: Map<Vehiculo, string> = new Map;
 
-    constructor(fechaInicio: number, fechaFin: number){
-        this.fechaInicio = fechaInicio;
-        this.fechaFin = fechaFin;
+    constructor() {
+
     }
 
-    public setFechaInicio(data: number): void{
-        this.fechaInicio = data;
+    agregarVehiculo(vehiculo: Vehiculo): void {
+        this.vehiculos.set(vehiculo, vehiculo.getPatente());
     }
 
-    public getFechaInicio(): number{
-        return this.fechaInicio;
+
+    eliminarVehiculo(vehiculo: Vehiculo): void {
+        this.vehiculos.delete(vehiculo);
     }
 
-    public setFechaFin(data: number): void{
-        this.fechaFin = data;
+    obtenerVehiculo(patente: string): Vehiculo | undefined {
+        for (const [vehiculo, pat] of this.vehiculos.entries()) {
+            if (pat === patente) {
+                return vehiculo;
+            }
+        }
+        return undefined;
     }
 
-    public getFechaFin(): number{
-        return this.fechaFin;
+    listarVehiculos(): Vehiculo[] {
+        return Array.from(this.vehiculos.keys());
     }
+
 }
