@@ -23,19 +23,29 @@ test("El constructor de la clase debe instanciar un objeto del tipo NecesitaLimp
     expect(limpieza2).toBeInstanceOf(NecesitaLimpieza);
 });
 
-test ("testeo de getters", () => {
+test ("Devolver fecha inicio", () => {
     expect(limpieza.getFechaInicio()).toBe(20250101);
+})
+
+test ("Devolver fecha fin", () => {
     expect(limpieza.getFechaFin()).toBe(20251231);
+})
+
+test ("Devolver distancia recorrida", () => {
     expect(limpieza.getdistanciaRecorrida()).toBe(200000);
 })
 
-test ("testeo de setters", () => {
+test ("Debe setear y devolver fecha inicio", () => {
     limpieza.setFechaInicio(20250505)
     expect(limpieza.getFechaInicio()).toBe(20250505);
+})
 
+test ("Debe setear y devolver fecha fin", () => {
     limpieza.setFechaFin(20250510)
     expect(limpieza.getFechaFin()).toBe(20250510);
+})
 
+test ("Debe setear y devolver distancia recorrida", () => {
     limpieza.setdistanciaRecorrida(300000)
     expect(limpieza.getdistanciaRecorrida()).toBe(300000);
 })

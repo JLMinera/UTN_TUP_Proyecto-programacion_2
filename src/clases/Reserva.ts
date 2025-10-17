@@ -11,6 +11,10 @@ export default class Reserva extends Estado{
 
     public setVehiculo(value:Vehiculo){
         this.vehiculo=value;
+    }
+
+    public getVehiculo(){
+        this.vehiculo;
 
 }
 }

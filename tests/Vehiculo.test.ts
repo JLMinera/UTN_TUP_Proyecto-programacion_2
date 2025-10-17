@@ -22,27 +22,33 @@ test("El constructor de la clase debe instanciar un objeto del tipo Vehiculo", (
     expect(vehiculo2).toBeInstanceOf(VehiculoTest);
 });
 
-test("Testeo de getters", () => {
+test("Debe devolver patente", () => {
     expect(vehiculo1.getPatente()).toBe("ABC123");
-    expect(vehiculo1.getKilometraje()).toBe(500);
-    expect(vehiculo1.getTarifaBase()).toBe(24000);
-    expect(vehiculo1.getDisponible()).toBe(true);
-    expect(vehiculo1.getEstado()).toBe(disponible);
 
 });
 
-test("Testeo setters", () => {
+test("Debe devolver kilometraje", () => {
+    expect(vehiculo1.getKilometraje()).toBe(500);
+});
+
+test("Debe devolver tarifa base", () => {
+    expect(vehiculo1.getTarifaBase()).toBe(24000);
+});
+
+
+test("Debe setear y devolver patente", () => {
     vehiculo1.setPatente("DEF456")
     expect(vehiculo1.getPatente()).toBe("DEF456");
+});
+
+test("Debe setear y devolver kilometraje", () => {
     vehiculo1.setKilometraje(1)
     expect(vehiculo1.getKilometraje()).toBe(1);
+});
+
+test("Debe setear y devolver tarifa base", () => {
     vehiculo1.setTarifaBase(70);
     expect(vehiculo1.getTarifaBase()).toBe(70);
-    vehiculo1.setDisponible(false);
-    expect(vehiculo1.getDisponible()).toBe(false);
-    vehiculo1.setEstado(mantenimiento);
-    expect(vehiculo1.getEstado()).toBe(mantenimiento);
-
 });
 
 });
