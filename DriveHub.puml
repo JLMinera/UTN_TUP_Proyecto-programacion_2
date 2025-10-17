@@ -6,10 +6,12 @@ class GestorDeReserva {
     - kilometrajeInicial: number
     - kilometrajeFinal: number
     - distanciaRecorrida: number
+    - cliente: Cliente
+    - vehiculo: Vehiculo
 
     + getters()
     + setters()
-    + tarifa(tarifaInicial, distancia)
+    + tarifa(): number
 }
 
 abstract class Persona {
@@ -28,10 +30,8 @@ class Cliente {
 
 abstract class Vehiculo {
     # patente: string
-    #kilometraje: number
+    # kilometraje: number
     # tarifaBase: number
-    - disponible: bool
-    # estado: Estado
 
     + getters()
     + setters()
@@ -51,47 +51,56 @@ class SUV {
 }
 
 interface Tarifa {
-
+    + calculoTarifa(): number
 }
 
 abstract class Estado {
-    - fechaInicio: number
-    - fechaFin: number
+    - fechaInicio: date
+    - fechaFin: date
+    - vehiculo: map<matricula: string, Vehiculo>
 
     + getters()
     + setters()
 }
 
 class Reserva {
-    - cliente: Cliente
+    
 }
 
 class NecesitaLimpieza {
-    - distanciaRecorrida: number
+    
 }
 
 class Mantenimiento {
     - costo: number
-    - fecha: number
+    
+}
+
+class Disponible {
+    
 }
 
 ' Relaciones
 
 Persona <|-d- Cliente
 
-Tarifa <|.. Sedan
-Tarifa <|.. Compacto
-Tarifa <|.. SUV
+Tarifa <|.u. Sedan
+Tarifa <|.u. Compacto
+Tarifa <|.u. SUV
 
 Vehiculo <|-d- Sedan
 Vehiculo <|-d- Compacto
 Vehiculo <|-d- SUV
 
-Vehiculo *-r- Estado
+GestorDeReserva *-l- Vehiculo
+GestorDeReserva *-r- Cliente
+
+Estado *-r- Vehiculo
 
 Estado <|-d- Reserva
 Estado <|-d- NecesitaLimpieza
 Estado <|-d- Mantenimiento
+Estado <|-d- Disponible
 
 
 
