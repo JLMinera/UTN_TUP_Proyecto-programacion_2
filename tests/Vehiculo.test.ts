@@ -7,18 +7,22 @@ import Mantenimiento from "../src/clases/Mantenimiento";
 class VehiculoTest extends Vehiculo{}
 
 describe("test de la clase Vehiculo", () => {
-  let vehiculo1: VehiculoTest;
-  let disponible: Disponible;
-  let mantenimiento: Mantenimiento;
+    let vehiculo1: VehiculoTest;
+    let disponible: Disponible;
+    let mantenimiento: Mantenimiento;
+    let fechaInicio: Date;
+    let fechaFin: Date;
 
 beforeEach(() => {
-    disponible = new Disponible(20250101, 20251231);
-    mantenimiento = new Mantenimiento(25000, 20250101, 20251231);
-    vehiculo1 = new VehiculoTest("ABC123", 500, 24000, true, disponible);
-  });
+    fechaInicio = new Date(2025, 10, 16);
+    fechaFin = new Date(2025, 10, 17);
+    disponible = new Disponible(fechaInicio, fechaFin);
+    mantenimiento = new Mantenimiento(25000, fechaInicio, fechaFin);
+    vehiculo1 = new VehiculoTest("ABC123", 500, 24000);
+});
 
 test("El constructor de la clase debe instanciar un objeto del tipo Vehiculo", () => {
-    const vehiculo2 = new VehiculoTest("ABC123", 500, 24000, true, disponible);
+    const vehiculo2 = new VehiculoTest("ABC123", 500, 24000);
     expect(vehiculo2).toBeInstanceOf(VehiculoTest);
 });
 
