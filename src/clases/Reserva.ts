@@ -1,16 +1,14 @@
 import Estado from "./Estado";
 import Vehiculo from "./Vehiculo";
 
-export default class Reserva extends Estado{
-    private vehiculo: Vehiculo;
+export default class Reserva extends Estado {
 
-    constructor(vehiculo:Vehiculo, fechaInicio: number, fechaFin:number ){
-        super(fechaInicio, fechaFin)
-        this.vehiculo=vehiculo;
+    constructor(fechaInicio: Date, fechaFin: Date) {
+        super(fechaInicio, fechaFin);
+        this.fechaInicio = fechaInicio;
+        this.fechaFin = fechaFin;
+        this.vehiculos = new Map<string, Vehiculo>();
     }
 
-    public setVehiculo(value:Vehiculo){
-        this.vehiculo=value;
 
-}
-}
+    }

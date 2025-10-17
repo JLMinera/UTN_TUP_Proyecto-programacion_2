@@ -1,19 +1,24 @@
 import Estado from "./Estado";
+import Vehiculo from "./Vehiculo";
 
-export default class NecesitaMantenimiento extends Estado{
-    private distanciaRecorrida:number;
+export default class NecesitaLimpieza extends Estado {
+    private distanciaRecorrida: number;
 
-    constructor(distanciaRecorrida:number, fechaInicio:number, fechaFin:number){
-        super(fechaInicio, fechaFin)
-        this.distanciaRecorrida=distanciaRecorrida;
+
+    constructor(distanciaRecorrida: number, fechaInicio: Date, fechaFin: Date) {
+        super(fechaInicio, fechaFin);
+        this.fechaInicio = fechaInicio;
+        this.fechaFin = fechaFin;
+        this.vehiculos = new Map<string, Vehiculo>();
+        this.distanciaRecorrida = distanciaRecorrida;
     }
 
-    public setdistanciaRecorrida(value:number){
-        this.distanciaRecorrida=value;
-    }
 
-    public getdistanciaRecorrida():number{
+    public getDistanciaRecorrida(): number {
         return this.distanciaRecorrida;
     }
 
+    public setDistanciaRecorrida(value: number): void {
+        this.distanciaRecorrida = value;
+    }
 }
