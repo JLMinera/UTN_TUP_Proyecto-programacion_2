@@ -7,42 +7,52 @@ import Mantenimiento from "../src/clases/Mantenimiento";
 class VehiculoTest extends Vehiculo{}
 
 describe("test de la clase Vehiculo", () => {
-  let vehiculo1: VehiculoTest;
-  let disponible: Disponible;
-  let mantenimiento: Mantenimiento;
+    let vehiculo1: VehiculoTest;
+    let disponible: Disponible;
+    let mantenimiento: Mantenimiento;
+    let fechaInicio: Date;
+    let fechaFin: Date;
 
 beforeEach(() => {
-    disponible = new Disponible(20250101, 20251231);
-    mantenimiento = new Mantenimiento(25000, 20250101, 20251231);
-    vehiculo1 = new VehiculoTest("ABC123", 500, 24000, true, disponible);
-  });
+    fechaInicio = new Date(2025, 10, 16);
+    fechaFin = new Date(2025, 10, 17);
+    disponible = new Disponible(fechaInicio, fechaFin);
+    mantenimiento = new Mantenimiento(25000, fechaInicio, fechaFin);
+    vehiculo1 = new VehiculoTest("ABC123", 500, 24000);
+});
 
 test("El constructor de la clase debe instanciar un objeto del tipo Vehiculo", () => {
-    const vehiculo2 = new VehiculoTest("ABC123", 500, 24000, true, disponible);
+    const vehiculo2 = new VehiculoTest("ABC123", 500, 24000);
     expect(vehiculo2).toBeInstanceOf(VehiculoTest);
 });
 
-test("Testeo de getters", () => {
+test("Debe devolver patente", () => {
     expect(vehiculo1.getPatente()).toBe("ABC123");
-    expect(vehiculo1.getKilometraje()).toBe(500);
-    expect(vehiculo1.getTarifaBase()).toBe(24000);
-    expect(vehiculo1.getDisponible()).toBe(true);
-    expect(vehiculo1.getEstado()).toBe(disponible);
 
 });
 
-test("Testeo setters", () => {
+test("Debe devolver kilometraje", () => {
+    expect(vehiculo1.getKilometraje()).toBe(500);
+});
+
+test("Debe devolver tarifa base", () => {
+    expect(vehiculo1.getTarifaBase()).toBe(24000);
+});
+
+
+test("Debe setear y devolver patente", () => {
     vehiculo1.setPatente("DEF456")
     expect(vehiculo1.getPatente()).toBe("DEF456");
+});
+
+test("Debe setear y devolver kilometraje", () => {
     vehiculo1.setKilometraje(1)
     expect(vehiculo1.getKilometraje()).toBe(1);
+});
+
+test("Debe setear y devolver tarifa base", () => {
     vehiculo1.setTarifaBase(70);
     expect(vehiculo1.getTarifaBase()).toBe(70);
-    vehiculo1.setDisponible(false);
-    expect(vehiculo1.getDisponible()).toBe(false);
-    vehiculo1.setEstado(mantenimiento);
-    expect(vehiculo1.getEstado()).toBe(mantenimiento);
-
 });
 
 });

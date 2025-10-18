@@ -1,43 +1,57 @@
 import Disponible from "../src/clases/Disponible";
-import Estado from "../src/clases/Estado";
 import NecesitaLimpieza from "../src/clases/NecesitaLimpieza";
 import Vehiculo from "../src/clases/Vehiculo";
 
 class VehiculoTest extends Vehiculo{}
 
 
-describe("tests de la clase NecesitaLimpieza", () =>{
+describe("tests de la clase NecesitaLimpieza", () => {
     let vehiculo1: VehiculoTest;
     let disponible: Disponible;
+    let fechaInicio: Date;
+    let fechaFin: Date;
     let limpieza: NecesitaLimpieza;
 
-
-beforeEach(() => {
-    limpieza = new NecesitaLimpieza(200000, 20250101, 20251231)
-    vehiculo1 = new VehiculoTest("ABC123", 500, 24000, true, limpieza);
-    disponible = new Disponible(20250101, 20251231);
+    beforeEach(() => {
+    fechaInicio = new Date(2025, 10, 16);
+    fechaFin = new Date(2025, 10, 17);
+    vehiculo1 = new VehiculoTest("ABC123", 500, 24000);
+    disponible = new Disponible(fechaInicio, fechaFin);
+    limpieza = new NecesitaLimpieza(200, fechaInicio, fechaFin);
 })
 
 test("El constructor de la clase debe instanciar un objeto del tipo NecesitaLimpieza", () => {
-    const limpieza2 = new NecesitaLimpieza(222, 20250102, 20251232);
+    const limpieza2 = new NecesitaLimpieza(222, fechaInicio, fechaFin);
     expect(limpieza2).toBeInstanceOf(NecesitaLimpieza);
 });
 
-test ("testeo de getters", () => {
-    expect(limpieza.getFechaInicio()).toBe(20250101);
-    expect(limpieza.getFechaFin()).toBe(20251231);
-    expect(limpieza.getdistanciaRecorrida()).toBe(200000);
+test ("Devolver fecha inicio", () => {
+    expect(limpieza.getFechaInicio().getTime()).toBe(fechaInicio.getTime());
 })
 
-test ("testeo de setters", () => {
-    limpieza.setFechaInicio(20250505)
-    expect(limpieza.getFechaInicio()).toBe(20250505);
+test ("Devolver fecha fin", () => {
+    expect(limpieza.getFechaFin().getTime()).toBe(fechaFin.getTime());
+})
 
-    limpieza.setFechaFin(20250510)
-    expect(limpieza.getFechaFin()).toBe(20250510);
+test ("Devolver distancia recorrida", () => {
+    expect(limpieza.getDistanciaRecorrida()).toBe(200);
+})
 
-    limpieza.setdistanciaRecorrida(300000)
-    expect(limpieza.getdistanciaRecorrida()).toBe(300000);
+test ("Debe setear y devolver fecha inicio", () => {
+    fechaInicio = new Date(2025, 10, 16);
+    limpieza.setFechaInicio(fechaInicio)
+    expect(limpieza.getFechaInicio().getTime()).toBe(fechaInicio.getTime());
+})
+
+test ("Debe setear y devolver fecha fin", () => {
+    fechaFin = new Date(2025, 10, 17);
+    limpieza.setFechaFin(fechaFin)
+    expect(limpieza.getFechaFin().getTime()).toBe(fechaFin.getTime());
+})
+
+test ("Debe setear y devolver distancia recorrida", () => {
+    limpieza.setDistanciaRecorrida(300000)
+    expect(limpieza.getDistanciaRecorrida()).toBe(300000);
 })
 
 })

@@ -4,7 +4,7 @@ export default abstract class Estado {
 
     protected fechaInicio: Date;
     protected fechaFin: Date;
-    protected vehiculos: Map<string, Vehiculo>;
+    public vehiculos: Map<string, Vehiculo>;
 
     constructor(fechaInicio: Date, fechaFin: Date) {
         this.fechaInicio = fechaInicio;
