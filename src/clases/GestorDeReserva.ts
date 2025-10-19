@@ -1,5 +1,6 @@
 import Cliente from "./Cliente"
 import Vehiculo from "./Vehiculo"
+import Temporada from "./Temporada"
 
 export default class GestorDeReserva {
     private kilometrajeInicial: number;
@@ -8,18 +9,24 @@ export default class GestorDeReserva {
     private vehiculo: Vehiculo;
     private cliente: Cliente;
     private vehiculoDevuelto: boolean;
+    private fechaInicio: Date;
+    private fechaFin: Date;
+    private temporada: Temporada;
 
-    constructor(vehiculo: Vehiculo, cliente: Cliente){
+    constructor(vehiculo: Vehiculo, cliente: Cliente, fechaInicio: Date, fechaFin: Date) {
         this.cliente = cliente;
         this.vehiculo = vehiculo;
+        this.fechaInicio = fechaInicio;
+        this.fechaFin = fechaFin;
         this.kilometrajeInicial = vehiculo.getKilometraje();
         this.kilometrajeFinal = vehiculo.getKilometraje();
-        this.distanciaRecorrida = this.kilometrajeFinal-this.kilometrajeInicial;
+        this.distanciaRecorrida = this.kilometrajeFinal - this.kilometrajeInicial;
         this.vehiculoDevuelto = false;
+        this.temporada = //Metodo para obtener la temporada;
 
     }
 
-    public setKilometrajeInicial(data: number){
+    public setKilometrajeInicial(data: number) {
         this.kilometrajeInicial = data;
     }
 
@@ -27,7 +34,7 @@ export default class GestorDeReserva {
         return this.kilometrajeInicial;
     }
 
-    public setKilometrajeFinal(data: number){
+    public setKilometrajeFinal(data: number) {
         this.kilometrajeFinal = data;
     }
 
@@ -35,7 +42,7 @@ export default class GestorDeReserva {
         return this.kilometrajeFinal;
     }
 
-    public setDistanciaRecorrida(data: number){
+    public setDistanciaRecorrida(data: number) {
         this.distanciaRecorrida = data;
     }
 
@@ -51,7 +58,7 @@ export default class GestorDeReserva {
         this.cliente = data;
     }
 
-    public getVehiculo(): Vehiculo{
+    public getVehiculo(): Vehiculo {
         return this.vehiculo;
     }
 
@@ -61,6 +68,29 @@ export default class GestorDeReserva {
 
     public getVehiculoDevuelto(): boolean {
         return this.vehiculoDevuelto;
+    }
+
+    public setFechaInicio(data: Date) {
+        this.fechaInicio = data;
+    }
+
+    public getFechaInicio(): Date {
+        return this.fechaInicio;
+    }
+
+    public setFechaFin(data: Date) {
+        this.fechaFin = data;
+    }
+
+    public getFechaFin(): Date {
+        return this.fechaFin;
+    }
+
+    public setTemporada(data: Temporada){
+        this.temporada = data;
+    }
+    public getTemporada(): Temporada{
+        return this.temporada;
     }
 
     public setVehiculoDevuelto() {

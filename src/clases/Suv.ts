@@ -1,9 +1,8 @@
-import Vehiculo from "./Vehiculo"; 
-import Estado from "./Estado";
+import Vehiculo from "./Vehiculo";
 
-export default class Suv extends Vehiculo{
-   
-    constructor (patente: string, kilometraje: number, tarifaBase: number, disponible: boolean, estado: Estado){
-            super (patente, kilometraje,tarifaBase, disponible,  estado)
-        }
+export default class Suv extends Vehiculo {
+
+    constructor(patente: string, kilometraje: number, tarifaBase: number, limiteDiarioKm: number,adicionalPorKm: number, seguro: number) {
+        super(patente, kilometraje, tarifaBase, adicionalPorKm, limiteDiarioKm,seguro)
+    }
 }
