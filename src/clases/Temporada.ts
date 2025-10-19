@@ -39,8 +39,4 @@ export default abstract class Temporada {
     public reservaEnTemporada(fechaReserva: Date): boolean {
         return (fechaReserva >= this.fechaInicio && fechaReserva <= this.fechaFin);
     }
-
-    public recargoPorTemporada(tarifaBase: number): number {
-        return tarifaBase * this.recargo;
-    }
 }
