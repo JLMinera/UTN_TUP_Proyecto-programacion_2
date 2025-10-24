@@ -19,12 +19,16 @@ describe("Test clase TemporadaAlta", () => {
 
     it("Debe devolver la fecha inicio temporada Alta", () => {
         const fechaInicioTest = new Date("22-10-2025");
-        expect(temporadaAlta.getFechaInicio).toEqual(fechaInicioTest);
+        fechaInicioTest.setHours(0, 0, 0, 0);
+
+        expect(temporadaAlta.getFechaInicio().getTime()).toEqual(fechaInicioTest.getTime());
     });
 
     it("Debe devolver la fecha fin temporada alta", () => {
         const fechaFinTest = new Date("25-11-2025");
-        expect(temporadaAlta.getFechaFin).toEqual(fechaFinTest);
+        fechaFinTest.setHours(23, 59, 59, 999);
+
+        expect(temporadaAlta.getFechaFin().getTime()).toEqual(fechaFinTest.getTime());
     });
 
     it("Debe devolver el valor de recargo temporada Alta", () => {
@@ -35,24 +39,25 @@ describe("Test clase TemporadaAlta", () => {
         const fecha = new Date("10-11-2025");
         temporadaAlta.setFechaInicio(fecha);
 
-        expect(temporadaAlta["fechaInicio"]).toEqual(fecha);
+        expect(temporadaAlta["fechaInicio"].getTime()).toEqual(fecha.getTime());
     });
 
     it("Debe establecer la fecha fin temporada alta", () => {
         const fecha = new Date("03-12-2025");
-        temporadaAlta.setFechaInicio(fecha);
+        temporadaAlta.setFechaFin(fecha);
 
-        expect(temporadaAlta["fechaFin"]).toEqual(fecha);
+        expect(temporadaAlta["fechaFin"].getTime()).toEqual(fecha.getTime());
     });
     
     it("Debe establecer el valor del recargo temporada alta", () => {
         temporadaAlta.setRecargo(1.5);
+        
         expect(temporadaAlta["recargo"]).toEqual(1.5);
     });
 
     it("Debe devolver que fecha está dentro del rango de fechas temporada alta", () => {
-        let fechaReserva = new Date("30-11-2025");
-        
+        let fechaReserva = new Date("20-11-2025");
+
         expect(temporadaAlta.reservaEnTemporada(fechaReserva)).toEqual(true);
     });
 

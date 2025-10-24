@@ -37,6 +37,7 @@ export default abstract class Temporada {
     }
 
     public reservaEnTemporada(fechaReserva: Date): boolean {
-        return (fechaReserva >= this.fechaInicio && fechaReserva <= this.fechaFin);
+        return (fechaReserva.getTime() >= this.fechaInicio.getTime() && 
+                fechaReserva.getTime() <= this.fechaFin.getTime());
     }
 }
