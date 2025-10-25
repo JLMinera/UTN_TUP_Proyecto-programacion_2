@@ -6,8 +6,8 @@ describe("Test clase TemporadaAlta", () => {
     let fechaFin: Date;
 
     beforeEach( () => {
-        fechaInicio = new Date("22-10-2025");
-        fechaFin = new Date("25-11-2025");
+        fechaInicio = new Date(2025,10,22);
+        fechaFin = new Date(2025,11,25);
         temporadaAlta = new TemporadaAlta(fechaInicio, fechaFin);
     });
 
@@ -18,14 +18,14 @@ describe("Test clase TemporadaAlta", () => {
     });
 
     it("Debe devolver la fecha inicio temporada Alta", () => {
-        const fechaInicioTest = new Date("22-10-2025");
+        const fechaInicioTest = new Date(2025,10,22);
         fechaInicioTest.setHours(0, 0, 0, 0);
 
         expect(temporadaAlta.getFechaInicio().getTime()).toEqual(fechaInicioTest.getTime());
     });
 
     it("Debe devolver la fecha fin temporada alta", () => {
-        const fechaFinTest = new Date("25-11-2025");
+        const fechaFinTest = new Date(2025,11,25);
         fechaFinTest.setHours(23, 59, 59, 999);
 
         expect(temporadaAlta.getFechaFin().getTime()).toEqual(fechaFinTest.getTime());
@@ -36,14 +36,14 @@ describe("Test clase TemporadaAlta", () => {
     });
 
     it("Debe establecer la fecha inicio temporada alta", () => {
-        const fecha = new Date("10-11-2025");
+        const fecha = new Date(2025,11,10);
         temporadaAlta.setFechaInicio(fecha);
 
         expect(temporadaAlta["fechaInicio"].getTime()).toEqual(fecha.getTime());
     });
 
     it("Debe establecer la fecha fin temporada alta", () => {
-        const fecha = new Date("03-12-2025");
+        const fecha = new Date(2025,12,3);
         temporadaAlta.setFechaFin(fecha);
 
         expect(temporadaAlta["fechaFin"].getTime()).toEqual(fecha.getTime());
@@ -56,13 +56,13 @@ describe("Test clase TemporadaAlta", () => {
     });
 
     it("Debe devolver que fecha está dentro del rango de fechas temporada alta", () => {
-        let fechaReserva = new Date("20-11-2025");
+        let fechaReserva = new Date(2025,11,20);
 
         expect(temporadaAlta.reservaEnTemporada(fechaReserva)).toEqual(true);
     });
 
     it("Debe devolver que fecha no está dentro del rango de fechas temporada alta", () => {
-        let fechaReserva = new Date("01-11-2028");
+        let fechaReserva = new Date(2028,11,1);
         
         expect(temporadaAlta.reservaEnTemporada(fechaReserva)).toEqual(false);
     });
