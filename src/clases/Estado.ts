@@ -4,15 +4,13 @@ export default abstract class Estado {
 
     protected fechaInicio: Date;
     protected fechaFin: Date;
-    public vehiculos: Map<string, Vehiculo>;
 
     constructor(fechaInicio: Date, fechaFin: Date) {
         this.fechaInicio = fechaInicio;
         this.fechaFin = fechaFin;
-        this.vehiculos = new Map<string, Vehiculo>();
     }
 
-    public setFechaInicio(data: Date){
+    public setFechaInicio(data: Date) {
         this.fechaInicio = data;
     }
 
@@ -20,7 +18,7 @@ export default abstract class Estado {
         return this.fechaInicio;
     }
 
-    public setFechaFin(data: Date){
+    public setFechaFin(data: Date) {
         this.fechaFin = data;
     }
 
@@ -28,12 +26,7 @@ export default abstract class Estado {
         return this.fechaFin;
     }
 
-    public agregarVehiculo(patente: string, vehiculo: Vehiculo): void {
-        this.vehiculos.set(patente, vehiculo);
-        console.log(`Vehículo con patente ${patente} agregado correctamente.`);
-    }
-
-    public quitarVehiculo(patente: string): void {
+    /* public quitarVehiculo(patente: string): void {
         if (this.vehiculos.has(patente)) {
             this.vehiculos.delete(patente);
             console.log(`Vehículo con patente ${patente} eliminado correctamente.`);
@@ -55,5 +48,5 @@ export default abstract class Estado {
             throw new Error(`No se encontró ningún vehículo con la patente ${patente}`);
         }
         return vehiculo;
-}
+    } */
 }

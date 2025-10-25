@@ -1,24 +1,23 @@
 import Estado from "./Estado";
 import Vehiculo from "./Vehiculo";
 
-export default class Mantenimiento extends Estado{
-    private costo: number;
+export default class Mantenimiento extends Estado {
 
-    constructor(costo:number, fechaInicio: Date, fechaFin: Date) {
+    private costo: number;
+    private vehiculosEnMantenimiento: Map<string, Vehiculo> = new Map();
+
+    constructor(costo: number, fechaInicio: Date, fechaFin: Date) {
         super(fechaInicio, fechaFin);
         this.fechaInicio = fechaInicio;
         this.fechaFin = fechaFin;
-        this.vehiculos = new Map<string, Vehiculo>();
-        this.costo=costo;
+        this.costo = costo;
     }
 
-    public setCosto(value:number){
-        this.costo=value;
+    public setCosto(value: number): void {
+        this.costo = value;
     }
 
-    public getCosto():number{
+    public getCosto(): number {
         return this.costo;
     }
-
-
 }
