@@ -1,7 +1,6 @@
 import Vehiculo from "./Vehiculo";
 
 export default abstract class Estado {
-
     protected fechaInicio: Date;
     protected fechaFin: Date;
 
@@ -10,7 +9,7 @@ export default abstract class Estado {
         this.fechaFin = fechaFin;
     }
 
-    public setFechaInicio(data: Date) {
+    public setFechaInicio(data: Date): void {
         this.fechaInicio = data;
     }
 
@@ -18,7 +17,7 @@ export default abstract class Estado {
         return this.fechaInicio;
     }
 
-    public setFechaFin(data: Date) {
+    public setFechaFin(data: Date): void {
         this.fechaFin = data;
     }
 
@@ -26,27 +25,11 @@ export default abstract class Estado {
         return this.fechaFin;
     }
 
-    /* public quitarVehiculo(patente: string): void {
-        if (this.vehiculos.has(patente)) {
-            this.vehiculos.delete(patente);
-            console.log(`Vehículo con patente ${patente} eliminado correctamente.`);
-        } else {
-            throw new Error(`No se encontró ningún vehículo con patente ${patente} para eliminar.`);
-        }
-    }
+    public abstract getVehiculos(): Map<string, Vehiculo>;
 
-    public getVehiculos(): Map<string, Vehiculo> {
-        if (this.vehiculos.size === 0) {
-            throw new Error("No hay vehículos en el registro.");
-        }
-        return this.vehiculos;
-    }
+    public abstract quitarVehiculo(patente: string): boolean;
 
-    public getVehiculo(patente: string): Vehiculo {
-        const vehiculo = this.vehiculos.get(patente);
-        if (!vehiculo) {
-            throw new Error(`No se encontró ningún vehículo con la patente ${patente}`);
-        }
-        return vehiculo;
-    } */
+    public abstract consultarEstado(patente: string): boolean;
+
+    public abstract agregarVehiculo(patente: string, vehiculo: Vehiculo): void;
 }

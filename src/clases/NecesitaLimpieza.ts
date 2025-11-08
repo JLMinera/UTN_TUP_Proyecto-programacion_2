@@ -2,7 +2,6 @@ import Estado from "./Estado";
 import Vehiculo from "./Vehiculo";
 
 export default class NecesitaLimpieza extends Estado {
-
     private distanciaRecorrida: number;
     private static vehiculosNecesitaLimpieza: Map<string, Vehiculo> = new Map();
 
@@ -21,7 +20,25 @@ export default class NecesitaLimpieza extends Estado {
         this.distanciaRecorrida = value;
     }
 
-    /* public agregarVehiculo(patente: string, vehiculo: Vehiculo): void {
-        NecesitaLimpieza.vehiculos.set(patente, vehiculo);
-    } */
+    public getVehiculos(): Map<string, Vehiculo> {
+        return NecesitaLimpieza.vehiculosNecesitaLimpieza;
+    }
+
+    public quitarVehiculo(patente: string): boolean {
+        if (this.getVehiculos().has(patente)) {
+            this.getVehiculos().delete(patente);
+            //console.log(`Vehículo con patente ${patente} eliminado correctamente.`);
+            return true;
+        } else {
+            throw new Error(`No se encontró ningún vehículo con patente ${patente} para eliminar.`);
+        }
+    }
+
+    public consultarEstado(patente: string): boolean {
+        return this.getVehiculos().has(patente);
+    }
+
+    public agregarVehiculo(patente: string, vehiculo: Vehiculo): void {
+        this.getVehiculos().set(patente, vehiculo);
+    }
 }
