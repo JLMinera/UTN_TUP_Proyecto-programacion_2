@@ -5,15 +5,13 @@ import GestorDeEstado from "./GestorDeEstado";
 
 export default class GestorDeVehiculo {
     private vehiculo: Vehiculo;
-    private estado: GestorDeEstado;
+    private estado!: GestorDeEstado;
     private ultimoKmMantenimiento!: number;
     private fechaUltimoMantenimiento!: Date;
     private contador: number;
 
-
     constructor(vehiculo: Vehiculo) {
         this.vehiculo = vehiculo;
-        this.estado = GestorDeEstado;
         this.contador = 0;
     }
 
@@ -23,16 +21,15 @@ export default class GestorDeVehiculo {
             throw new GestorDeVehiculoError("El valor del kilometraje obtenido es incorrecto")
         }
         this.ultimoKmMantenimiento = kmMantenimiento;
-
     }
 
     public getUltimoKmMantenimiento(): number {
         return this.ultimoKmMantenimiento;
     }
 
-      public setFechaUltimoMantenimiento(): void {
-        const fechaUltimoMantenimiento = this.estado.fechaFinMantenimiento();
-        if(Number.isNaN(fechaUltimoMantenimiento)){
+    public setFechaUltimoMantenimiento(fecha: Date): void {
+        const fechaUltimoMantenimiento = this.estado.actualizarFechaMantenimiento(fecha);
+        if (Number.isNaN(fechaUltimoMantenimiento)) {
             throw new GestorDeVehiculoError("La fecha proporcionada no es valida")
         }
         this.fechaUltimoMantenimiento = fechaUltimoMantenimiento;
@@ -43,14 +40,11 @@ export default class GestorDeVehiculo {
         return this.fechaUltimoMantenimiento;
     }
 
-    public contadorAcumulado(): void{
-        this.contador ++;
+    public contadorAcumulado(): void {
+        this.contador++;
     }
 
-    public getContadorAcumulado(): number{
+    public getContadorAcumulado(): number {
         return this.contador;
     }
-    
-
-
 }

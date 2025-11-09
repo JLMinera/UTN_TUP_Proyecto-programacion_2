@@ -1,31 +1,37 @@
-jest.mock("../src/clases/GestorDeEstado", () => ({
-    __esModule: true,
-    default: {
-        fechaFinMantenimiento: jest.fn(),
-    },
-}));
-import GestorDeReserva from "../src/clases/GestorDeReserva";
-import GestorDeVehiculo from "../src/clases/GestorDeVehiculo"
-import GestorDeEstado from "../src/clases/GestorDeEstado";
+jest.mock("../src/clases/GestorDeEstado", () => {
+    return {
+        __esModule: true,
+        default: jest.fn().mockImplementation(() => ({
+            actualizarFechaMantenimiento: jest.fn(),
+        })),
+    };
+});
 
+import GestorDeReserva from "../src/clases/GestorDeReserva";
+import GestorDeVehiculo from "../src/clases/GestorDeVehiculo";
+import GestorDeEstado from "../src/clases/GestorDeEstado";
 import Vehiculo from "../src/clases/Vehiculo";
 import GestorDeVehiculoError from "../src/clasesDeError/GestorDeVehiculoError";
 
-describe("Test GestorDEVehiculo", () => {
-
+describe("Test GestorDeVehiculo", () => {
     let gestorDeVehiculo: GestorDeVehiculo;
-    let mockVehiculo: jest.Mocked<Vehiculo>
-
+    let mockVehiculo: jest.Mocked<Vehiculo>;
+    let mockGestorDeEstado: any;
 
     beforeEach(() => {
         jest.clearAllMocks();
         mockVehiculo = {} as jest.Mocked<Vehiculo>;
+
+        mockGestorDeEstado = new (GestorDeEstado as jest.Mock)();
+        (GestorDeEstado as jest.Mock).mockReturnValue(mockGestorDeEstado);
+
         gestorDeVehiculo = new GestorDeVehiculo(mockVehiculo);
-    })
+        (gestorDeVehiculo as any).estado = mockGestorDeEstado;
+    });
 
     it("Debe lanzar un error si el kilometraje es inválido", () => {
         const mockGestorDeReserva = {
-            getKilometrajeFinal: jest.fn().mockReturnValue(-50)
+            getKilometrajeFinal: jest.fn().mockReturnValue(-50),
         } as unknown as GestorDeReserva;
 
         expect(() => {
@@ -38,19 +44,24 @@ describe("Test GestorDEVehiculo", () => {
     });
 
     it("Debe guardar la fecha si es correcta", () => {
-        (GestorDeEstado.fechaFinMantenimiento as jest.Mock).mockReturnValue(new Date("2024-12-20"));
+        mockGestorDeEstado.actualizarFechaMantenimiento.mockReturnValue(
+            new Date("2024-12-20")
+        );
 
-        gestorDeVehiculo.setFechaUltimoMantenimiento();
+        gestorDeVehiculo.setFechaUltimoMantenimiento(new Date("2024-12-20"));
 
-        expect(gestorDeVehiculo.getFechaUltimoMantenimiento()).toEqual(new Date("2024-12-20"));
-        expect(GestorDeEstado.fechaFinMantenimiento).toHaveBeenCalledTimes(1);
+        expect(gestorDeVehiculo.getFechaUltimoMantenimiento()).toEqual(
+            new Date("2024-12-20")
+        );
+        expect(mockGestorDeEstado.actualizarFechaMantenimiento).toHaveBeenCalledTimes(1);
     });
 
-    it("Debe Lanzar error cuando la fecha es NaN", () => {
-        (GestorDeEstado.fechaFinMantenimiento as jest.Mock).mockReturnValue(NaN);
+    it("Debe lanzar error cuando la fecha es NaN", () => {
+        mockGestorDeEstado.actualizarFechaMantenimiento.mockReturnValue(NaN);
 
-        expect(() => gestorDeVehiculo.setFechaUltimoMantenimiento())
-            .toThrow(GestorDeVehiculoError);
+        expect(() =>
+            gestorDeVehiculo.setFechaUltimoMantenimiento(new Date("2024-12-20"))
+        ).toThrow(GestorDeVehiculoError);
     });
 
     it("Debe sumar correctamente el contador", () => {
@@ -59,10 +70,6 @@ describe("Test GestorDEVehiculo", () => {
         expect(gestorDeVehiculo.getContadorAcumulado()).toEqual(2);
     });
 });
-
-
-
-
 
 
 

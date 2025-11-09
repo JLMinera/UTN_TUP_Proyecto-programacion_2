@@ -21,6 +21,10 @@ export default class GestorDeEstado {
         return estado.quitarVehiculo(patente);
     }
 
+    public actualizarFechaMantenimiento(fecha: Date): Date {
+        return fecha;
+    }
+
     public disparadorMantenimiento(patente: string, vehiculo: Vehiculo, estado: Mantenimiento): boolean {
         let ultimoMantenimientoSuperado = vehiculo.getKilometraje() - this.mantenimiento.getUltimoMantenimientoKm();
         const fechaActual = new Date();
