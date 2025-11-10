@@ -1,12 +1,6 @@
-import Disponible from "../src/clases/Disponible";
-import Mantenimiento from "../src/clases/Mantenimiento";
-import Vehiculo from "../src/clases/Vehiculo";
-
-class VehiculoTest extends Vehiculo {}
+import Mantenimiento from "../src/clases/Mantenimiento"
 
 describe("tests de la clase Mantenimiento", () => {
-    let vehiculo1: VehiculoTest;
-    let disponible: Disponible;
     let mantenimiento: Mantenimiento;
     let fechaInicio: Date;
     let fechaFin: Date;
@@ -15,8 +9,6 @@ describe("tests de la clase Mantenimiento", () => {
         fechaInicio = new Date(2025, 10, 16);
         fechaFin = new Date(2025, 10, 17);
         mantenimiento = new Mantenimiento(200000, fechaInicio, fechaFin);
-        vehiculo1 = new VehiculoTest("ABC123", 500, 24000);
-        disponible = new Disponible(fechaInicio, fechaFin);
     });
 
     test("El constructor de la clase debe instanciar un objeto del tipo Mantenimiento", () => {
