@@ -1,58 +1,36 @@
 import Vehiculo from "../src/clases/Vehiculo";
-import Estado from "../src/clases/Estado";
-import Disponible from "../src/clases/Disponible";
-import Mantenimiento from "../src/clases/Mantenimiento";
-
 
 class VehiculoTest extends Vehiculo{}
 
 describe("test de la clase Vehiculo", () => {
-    let vehiculo1: VehiculoTest;
-    let disponible: Disponible;
-    let mantenimiento: Mantenimiento;
-    let fechaInicio: Date;
-    let fechaFin: Date;
+    let vehiculo: VehiculoTest;
 
 beforeEach(() => {
-    fechaInicio = new Date(2025, 10, 16);
-    fechaFin = new Date(2025, 10, 17);
-    disponible = new Disponible(fechaInicio, fechaFin);
-    mantenimiento = new Mantenimiento(25000, fechaInicio, fechaFin);
-    vehiculo1 = new VehiculoTest("ABC123", 500, 24000);
+   vehiculo = new VehiculoTest("ABC123", 500);
 });
 
 test("El constructor de la clase debe instanciar un objeto del tipo Vehiculo", () => {
-    const vehiculo2 = new VehiculoTest("ABC123", 500, 24000);
-    expect(vehiculo2).toBeInstanceOf(VehiculoTest);
+    expect(vehiculo).toBeInstanceOf(VehiculoTest);
 });
 
 test("Debe devolver patente", () => {
-    expect(vehiculo1.getPatente()).toBe("ABC123");
+    expect(vehiculo.getPatente()).toBe("ABC123");
 
 });
 
 test("Debe devolver kilometraje", () => {
-    expect(vehiculo1.getKilometraje()).toBe(500);
-});
-
-test("Debe devolver tarifa base", () => {
-    expect(vehiculo1.getTarifaBase()).toBe(24000);
+    expect(vehiculo.getKilometraje()).toBe(500);
 });
 
 
-test("Debe setear y devolver patente", () => {
-    vehiculo1.setPatente("DEF456")
-    expect(vehiculo1.getPatente()).toBe("DEF456");
+test("Debe setear patente", () => {
+    vehiculo.setPatente("DEF456")
+    expect(vehiculo['patente']).toEqual("DEF456");
 });
 
-test("Debe setear y devolver kilometraje", () => {
-    vehiculo1.setKilometraje(1)
-    expect(vehiculo1.getKilometraje()).toBe(1);
-});
-
-test("Debe setear y devolver tarifa base", () => {
-    vehiculo1.setTarifaBase(70);
-    expect(vehiculo1.getTarifaBase()).toBe(70);
+test("Debe setear kilometraje", () => {
+    vehiculo.setKilometraje(1000)
+    expect(vehiculo['kilometraje']).toBe(1000);
 });
 
 });
