@@ -1,20 +1,28 @@
 import GestorDeReserva from "../src/clases/GestorDeReserva"
-import Vehiculo from "../src/clases/Vehiculo";
+import GestorVehiculo from "../src/clases/GestorDeVehiculo";
 import Cliente from "../src/clases/Cliente";
+import Temporada from "../src/clases/Temporada"
 
 describe("Test clase GestorDeReserva", ( )=> {
 
     let gestorReserva: GestorDeReserva;
-    const mockVehiculo: Vehiculo = { 
-            getKilometraje: jest.fn().mockReturnValue(5000),
-    } as unknown as Vehiculo;
+    const mockVehiculo: GestorVehiculo = { 
+         getKilometrajeActual: jest.fn().mockReturnValue(5000),
+    } as unknown as GestorVehiculo;
 
     const mockCliente: Cliente = {
 
     } as unknown as Cliente;
 
+    const mockTemporada: Temporada = {
+
+    } as unknown as Temporada;
+
     beforeEach(() => {
-        gestorReserva = new GestorDeReserva(mockVehiculo, mockCliente);
+        let fechaInicio = new Date(2025, 10, 16);
+        let fechaFin = new Date(2025, 10, 17);
+
+        gestorReserva = new GestorDeReserva(mockVehiculo, mockCliente, fechaInicio, fechaFin, mockTemporada);
     });
 
     afterEach(() => {});
@@ -74,7 +82,7 @@ describe("Test clase GestorDeReserva", ( )=> {
     });
 
     it("Debe establecer un nuevo valor al kilometro final", () => {
-        (mockVehiculo.getKilometraje as jest.Mock).mockReturnValue(10800);
+        (mockVehiculo.getKilometrajeActual as jest.Mock).mockReturnValue(10800);
         gestorReserva.setVehiculoDevuelto();
 
         expect(gestorReserva["kilometrajeFinal"]).toEqual(10800);

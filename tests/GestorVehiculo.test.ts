@@ -12,10 +12,15 @@ import GestorDeVehiculo from "../src/clases/GestorDeVehiculo";
 import GestorDeEstado from "../src/clases/GestorDeEstado";
 import Vehiculo from "../src/clases/Vehiculo";
 import GestorDeVehiculoError from "../src/clasesDeError/GestorDeVehiculoError";
+import CalculadoraDeTarifa from "../src/clases/CalculadoraDeTarifa";
 
 describe("Test GestorDeVehiculo", () => {
     let gestorDeVehiculo: GestorDeVehiculo;
     let mockVehiculo: jest.Mocked<Vehiculo>;
+    const mockCalculadora: CalculadoraDeTarifa = {
+    
+        } as unknown as CalculadoraDeTarifa;
+
     let mockGestorDeEstado: any;
 
     beforeEach(() => {
@@ -25,7 +30,7 @@ describe("Test GestorDeVehiculo", () => {
         mockGestorDeEstado = new (GestorDeEstado as jest.Mock)();
         (GestorDeEstado as jest.Mock).mockReturnValue(mockGestorDeEstado);
 
-        gestorDeVehiculo = new GestorDeVehiculo(mockVehiculo);
+        gestorDeVehiculo = new GestorDeVehiculo(mockVehiculo, mockCalculadora, 0, 0, 0, 0);
         (gestorDeVehiculo as any).estado = mockGestorDeEstado;
     });
 

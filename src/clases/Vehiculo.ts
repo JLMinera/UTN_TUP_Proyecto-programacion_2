@@ -4,20 +4,12 @@ export default abstract class Vehiculo {
 
     protected patente: string;
     protected kilometraje: number;
-    protected tarifaBase: number;
-    protected adicionalPorKm: number;
-    protected limiteDiarioKm: number;
-    protected seguro: number;
-    protected cantidadAlquileres: number;
+ 
 
-    constructor(patente: string, kilometraje: number, tarifaBase: number, adicionalPorKm: number, limiteDiarioKm: number, seguro: number) {
+    constructor(patente: string, kilometraje: number) {
         this.patente = patente;
         this.kilometraje = kilometraje;
-        this.tarifaBase = tarifaBase;
-        this.adicionalPorKm = adicionalPorKm;
-        this.seguro = seguro;
-        this.limiteDiarioKm = limiteDiarioKm;
-        this.cantidadAlquileres = 0;
+
     }
 
     public setPatente(data: string) {
@@ -34,38 +26,4 @@ export default abstract class Vehiculo {
         return this.kilometraje;
     }
 
-    public setTarifaBase(data: number) {
-        this.tarifaBase = data;
-    }
-    public getTarifaBase(): number {
-        return this.tarifaBase;
-    }
-
-    public setSeguro(data: number) {
-        this.seguro = data;
-    }
-    public getSeguro(): number {
-        return this.seguro;
-    }
-
-    public setAdicionalPorKm(data: number) {
-        this.seguro = data;
-    }
-    public getAdicionalPorKm(): number {
-        return this.seguro;
-    }
-    
-    public setLimiteDiarioKm(data: number) {
-        this.seguro = data;
-    }
-    public getLimiteDiarioKm(): number {
-        return this.seguro;
-    }
-
-    public setCantidadAlquileres(data: number) {
-        this.cantidadAlquileres = data;
-    }
-    public getCantidadAlquileres(): number {
-        return this.cantidadAlquileres;
-    }
 }
