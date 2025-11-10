@@ -1,14 +1,13 @@
 import CalculadoraDeTarifa from "./CalculadoraDeTarifa";
-import GestorDeReserva from "./GestorDeReserva";
+import GestorDeVehiculo from "./GestorDeVehiculo";
 
 export default class CalculadoraSedan extends CalculadoraDeTarifa {
-    
-    constructor(reserva: GestorDeReserva){
-        super (reserva)
-    }
-    public calcularTarifaTotal(): number{
-        let tarifaFinal: number;
-        tarifaFinal = (this.dias * (this.recargoTemporada * this.tarifaBase)) + (this.adicionalPorKm * this.kmRecorridos)
+
+    public calcularTarifaTotal(fechaInicio: Date, fechaFin: Date, kmTotales: number, vehiculo:GestorDeVehiculo, recargoTemporada: number): number{
+        let dias: number = this.diasTotales(fechaInicio, fechaFin);
+        let tarifaFinal: number = 0;
+        
+        tarifaFinal = (dias * (recargoTemporada * vehiculo.getTarifaBase())) + (vehiculo.getAdicionalPorKm() * kmTotales)
 
         return tarifaFinal
     }

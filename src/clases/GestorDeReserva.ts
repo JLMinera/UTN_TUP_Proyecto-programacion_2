@@ -1,29 +1,32 @@
 import Cliente from "./Cliente"
 import Vehiculo from "./Vehiculo"
 import Temporada from "./Temporada"
+import GestorDeVehiculo from "./GestorDeVehiculo";
 
 export default class GestorDeReserva {
     private kilometrajeInicial: number;
     private kilometrajeFinal: number;
     private distanciaRecorrida: number;
-    private vehiculo: Vehiculo;
+    private vehiculo: GestorDeVehiculo;
     private cliente: Cliente;
     private vehiculoDevuelto: boolean;
     private fechaInicio: Date;
     private fechaFin: Date;
+    //REVISAR LA TEMPORADA LE PONGO STRING PARA ASIGNAR VALOR Y QUE NO ROMPA)
     private temporada: Temporada;
+    private tarifaFinal: number;
 
-    constructor(vehiculo: Vehiculo, cliente: Cliente, fechaInicio: Date, fechaFin: Date) {
+    constructor(vehiculo: GestorDeVehiculo, cliente: Cliente, fechaInicio: Date, fechaFin: Date, temporada: Temporada) {
         this.cliente = cliente;
         this.vehiculo = vehiculo;
         this.fechaInicio = fechaInicio;
         this.fechaFin = fechaFin;
-        this.kilometrajeInicial = vehiculo.getKilometraje();
-        this.kilometrajeFinal = vehiculo.getKilometraje();
+        this.kilometrajeInicial = vehiculo.getKilometrajeActual();
+        this.kilometrajeFinal = vehiculo.getKilometrajeActual();
         this.distanciaRecorrida = this.kilometrajeFinal - this.kilometrajeInicial;
         this.vehiculoDevuelto = false;
-        this.temporada = //Metodo para obtener la temporada;
-
+        this.temporada = temporada;//Metodo para obtener la temporada;
+        this.tarifaFinal = -1;
     }
 
     public setKilometrajeInicial(data: number) {
@@ -58,11 +61,11 @@ export default class GestorDeReserva {
         this.cliente = data;
     }
 
-    public getVehiculo(): Vehiculo {
+    public getVehiculo(): GestorDeVehiculo {
         return this.vehiculo;
     }
 
-    public setVehiculo(data: Vehiculo) {
+    public setVehiculo(data: GestorDeVehiculo) {
         this.vehiculo = data;
     }
 
@@ -96,7 +99,14 @@ export default class GestorDeReserva {
     public setVehiculoDevuelto() {
         this.vehiculoDevuelto = true;
 
-        this.kilometrajeFinal = this.vehiculo.getKilometraje();
+        this.kilometrajeFinal = this.vehiculo.getKilometrajeActual();
         this.distanciaRecorrida = this.kilometrajeFinal - this.kilometrajeInicial;
     }
+
+    public tarifaFinalDeReserva(vehiculo: GestorDeVehiculo): number{
+    let total: number = 0;
+    total = vehiculo.getCalculadora().calcularTarifaTotal(this.getFechaInicio(), this.getFechaFin(), this.getDistanciaRecorrida(), this.getVehiculo(), this.getTemporada().getRecargo())
+    return total;
+    }
+
 }
