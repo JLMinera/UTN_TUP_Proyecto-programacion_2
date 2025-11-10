@@ -1,9 +1,14 @@
 import Mantenimiento from "../src/clases/Mantenimiento"
+import Vehiculo from "../src/clases/Vehiculo";
 
 describe("tests de la clase Mantenimiento", () => {
     let mantenimiento: Mantenimiento;
     let fechaInicio: Date;
     let fechaFin: Date;
+
+    const mockVehiculo: Vehiculo = { 
+        getKilometraje: jest.fn().mockReturnValue(5000),
+    } as unknown as Vehiculo;
 
     beforeEach(() => {
         fechaInicio = new Date(2025, 10, 16);
@@ -44,4 +49,15 @@ describe("tests de la clase Mantenimiento", () => {
         mantenimiento.setCosto(300000);
         expect(mantenimiento.getCosto()).toBe(300000);
     });
+
+    test (" agregarVehiculo() - Debe agregar un vehiculo al MAP de estado", () => {
+        mantenimiento.agregarVehiculo("ABC123", mockVehiculo);
+        expect(mantenimiento.getVehiculos().has("ABC123")).toBe(true);
+    });
+
+    test (" quitarVehiculo() - Debe quitar un vehiculo al MAP de estado", () => {
+        mantenimiento.agregarVehiculo("ABC123", mockVehiculo);
+        mantenimiento.quitarVehiculo("ABC123");
+        expect(mantenimiento.getVehiculos().size).toBe(0);    
+    })
 });
