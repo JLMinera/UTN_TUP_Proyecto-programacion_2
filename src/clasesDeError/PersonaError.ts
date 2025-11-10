@@ -5,7 +5,4 @@ export default class PersonaError extends Error {
         this.name = "PersonaError"
         Object.setPrototypeOf(this, PersonaError.prototype);
     }
-
-
-
 }

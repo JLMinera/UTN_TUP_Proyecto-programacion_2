@@ -2,14 +2,14 @@ import PersonaError from "../clasesDeError/PersonaError";
 
 export default abstract class Persona {
 
-    protected nombre: string;
-    protected apellido: string;
-    protected dni: number;
+    protected nombre!: string;
+    protected apellido!: string;
+    protected dni!: number;
 
     constructor(nombre: string, apellido: string, dni: number) {
-        this.nombre = nombre;
-        this.apellido = apellido;
-        this.dni = dni;
+            this.setNombre(nombre);
+            this.setApellido(apellido);
+            this.setDni(dni);
     }
 
     public setNombre(data: string) {

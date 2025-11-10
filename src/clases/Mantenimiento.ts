@@ -1,5 +1,6 @@
 import Estado from "./Estado";
 import Vehiculo from "./Vehiculo";
+import MantenimientoError from "../clasesDeError/MantenimientoError";
 
 export default class Mantenimiento extends Estado {
     private costo: number;
@@ -7,12 +8,16 @@ export default class Mantenimiento extends Estado {
 
     constructor(costo: number, fechaInicio: Date, fechaFin: Date) {
         super(fechaInicio, fechaFin);
-        this.fechaInicio = fechaInicio;
-        this.fechaFin = fechaFin;
+        if (!Number.isFinite(costo) || costo < 0) {
+            throw new MantenimientoError("El costo debe ser un número positivo");
+        }
         this.costo = costo;
     }
 
     public setCosto(value: number): void {
+        if (!Number.isFinite(value) || value < 0) {
+            throw new MantenimientoError("El costo debe ser un número positivo");
+        }
         this.costo = value;
     }
 
@@ -27,10 +32,9 @@ export default class Mantenimiento extends Estado {
     public quitarVehiculo(patente: string): boolean {
         if (this.getVehiculos().has(patente)) {
             this.getVehiculos().delete(patente);
-            //console.log(`Vehículo con patente ${patente} eliminado correctamente.`);
             return true;
         } else {
-            throw new Error(`No se encontró ningún vehículo con patente ${patente} para eliminar.`);
+            throw new MantenimientoError(`No se encontró ningún vehículo con patente ${patente} para eliminar.`);
         }
     }
 
@@ -47,6 +51,6 @@ export default class Mantenimiento extends Estado {
     }
 
     public getUltimoMantenimientoFecha(): Date {
-        return new Date;
+        return new Date();
     }
 }

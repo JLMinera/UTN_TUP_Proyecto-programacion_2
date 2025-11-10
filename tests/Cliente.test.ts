@@ -41,10 +41,4 @@ describe("Test Cliente", () => {
         cliente.setDni(4352636);
         expect(cliente.getDni()).toEqual(4352636);
     });
-
-
-
-
-
-
 });

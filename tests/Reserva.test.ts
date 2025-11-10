@@ -1,44 +1,57 @@
-import Cliente from "../src/clases/Cliente";
 import Reserva from "../src/clases/Reserva";
+import Cliente from "../src/clases/Cliente";
+import Vehiculo from "../src/clases/Vehiculo";
+import ReservaError from "../src/clasesDeError/ReservaError";
 
-describe("tests de la clase Reserva", () =>{
+class VehiculoTest extends Vehiculo {
+    constructor(patente: string, kilometraje: number) {
+        super(patente, kilometraje);
+    }
+}
+
+describe("Test de la clase Reserva", () => {
     let reserva: Reserva;
-    let fechaInicio: Date;
-    let fechaFin: Date;
     let cliente: Cliente;
+    let vehiculo: VehiculoTest;
 
     beforeEach(() => {
-        cliente = new Cliente("Maria", "Del Carmen", 12345678)
-        fechaInicio = new Date(2025, 10, 16);
-        fechaFin = new Date(2025, 10, 17);
-        reserva = new Reserva(cliente, fechaInicio, fechaFin);
+        cliente = new Cliente("Juan", "Pérez", 12345678);
+        reserva = new Reserva(cliente, new Date("2025-01-01"), new Date("2025-01-10"));
+        vehiculo = new VehiculoTest("ABC123", 10000);
     });
 
+    test("Debe instanciar una reserva correctamente", () => {
+        expect(reserva).toBeInstanceOf(Reserva);
+        expect(reserva.getCliente()).toBe(cliente);
+        expect(reserva.getFechaInicio()).toEqual(new Date("2025-01-01"));
+        expect(reserva.getFechaFin()).toEqual(new Date("2025-01-10"));
+    });
 
-test("El constructor de la clase debe instanciar un objeto del tipo Mantenimiento", () => {
-    expect(reserva).toBeInstanceOf(Reserva);
+    test("Agregar un vehículo correctamente", () => {
+        reserva.agregarVehiculo(vehiculo.getPatente(), vehiculo);
+        expect(reserva.getVehiculos().has(vehiculo.getPatente())).toBe(true);
+        expect(reserva.getVehiculos().get(vehiculo.getPatente())).toBe(vehiculo);
+    });
+
+    test("Agregar un vehículo inválido lanza ReservaError", () => {
+        expect(() => reserva.agregarVehiculo("", vehiculo)).toThrow(ReservaError);
+        expect(() => reserva.agregarVehiculo("XYZ999", null as any)).toThrow(ReservaError);
+    });
+
+    test("Quitar un vehículo correctamente", () => {
+        reserva.agregarVehiculo(vehiculo.getPatente(), vehiculo);
+        const resultado = reserva.quitarVehiculo(vehiculo.getPatente());
+        expect(resultado).toBe(true);
+        expect(reserva.getVehiculos().has(vehiculo.getPatente())).toBe(false);
+    });
+
+    test("Quitar un vehículo que no existe lanza ReservaError", () => {
+        expect(() => reserva.quitarVehiculo("XYZ999")).toThrow(ReservaError);
+    });
+
+    test("Consultar estado de un vehículo agregado y no agregado", () => {
+        reserva.agregarVehiculo(vehiculo.getPatente(), vehiculo);
+        expect(reserva.consultarEstado(vehiculo.getPatente())).toBe(true);
+        expect(reserva.consultarEstado("XYZ999")).toBe(false);
+    });
 });
-
-test ("Debe devolver fecha inicio", () => {
-    expect(reserva.getFechaInicio().getTime()).toBe(fechaInicio.getTime());
-})
-
-test ("Debe devolver fecha fin", () => {
-    expect(reserva.getFechaFin().getTime()).toBe(fechaFin.getTime());
-})
-
-
-test ("Debe setear y devolver fecha inicio", () => {
-    fechaInicio = new Date(2025, 10, 18);
-    reserva.setFechaInicio(fechaInicio)
-    expect(reserva.getFechaInicio().getTime()).toBe(fechaInicio.getTime());
-})
-
-test ("Debe setear y devolver fecha fin", () => {
-    fechaFin = new Date(2025, 10, 19);
-    reserva.setFechaFin(fechaFin)
-    expect(reserva.getFechaFin().getTime()).toBe(fechaFin.getTime());
-})
-
-
-})

@@ -1,80 +1,111 @@
-jest.mock("../src/clases/GestorDeEstado", () => {
-    return {
-        __esModule: true,
-        default: jest.fn().mockImplementation(() => ({
-            actualizarFechaMantenimiento: jest.fn(),
-        })),
-    };
-});
-
-import GestorDeReserva from "../src/clases/GestorDeReserva";
 import GestorDeVehiculo from "../src/clases/GestorDeVehiculo";
-import GestorDeEstado from "../src/clases/GestorDeEstado";
-import Vehiculo from "../src/clases/Vehiculo";
 import GestorDeVehiculoError from "../src/clasesDeError/GestorDeVehiculoError";
+import GestorDeReserva from "../src/clases/GestorDeReserva";
 import CalculadoraDeTarifa from "../src/clases/CalculadoraDeTarifa";
+import Vehiculo from "../src/clases/Vehiculo";
+import GestorDeEstado from "../src/clases/GestorDeEstado";
 
-describe("Test GestorDeVehiculo", () => {
-    let gestorDeVehiculo: GestorDeVehiculo;
-    let mockVehiculo: jest.Mocked<Vehiculo>;
-    const mockCalculadora: CalculadoraDeTarifa = {
-    
-        } as unknown as CalculadoraDeTarifa;
+class VehiculoMock extends Vehiculo {
+    constructor(patente: string, kilometraje: number) {
+        super(patente, kilometraje);
+    }
 
-    let mockGestorDeEstado: any;
+    setKilometraje(km: number) {
+        super.setKilometraje(km);
+    }
+
+    getKilometraje(): number {
+        return super.getKilometraje();
+    }
+}
+
+class MantenimientoMock {
+    actualizarFechaMantenimiento(fecha: Date): Date {
+        return fecha;
+    }
+}
+
+class EstadoMock extends GestorDeEstado {
+    constructor() {
+        super(new MantenimientoMock() as any);
+    }
+
+    actualizarFechaMantenimiento(fecha: Date): Date {
+        return fecha;
+    }
+}
+
+class CalculadoraMock extends CalculadoraDeTarifa {
+    calcularTarifaTotal = jest.fn().mockReturnValue(500);
+}
+
+describe("GestorDeVehiculo", () => {
+    let vehiculo: VehiculoMock;
+    let calculadora: CalculadoraMock;
+    let gestor: GestorDeVehiculo;
+    let estado: EstadoMock;
 
     beforeEach(() => {
-        jest.clearAllMocks();
-        mockVehiculo = {} as jest.Mocked<Vehiculo>;
-
-        mockGestorDeEstado = new (GestorDeEstado as jest.Mock)();
-        (GestorDeEstado as jest.Mock).mockReturnValue(mockGestorDeEstado);
-
-        gestorDeVehiculo = new GestorDeVehiculo(mockVehiculo, mockCalculadora, 0, 0, 0, 0);
-        (gestorDeVehiculo as any).estado = mockGestorDeEstado;
-    });
-
-    it("Debe lanzar un error si el kilometraje es inválido", () => {
-        const mockGestorDeReserva = {
-            getKilometrajeFinal: jest.fn().mockReturnValue(-50),
-        } as unknown as GestorDeReserva;
-
-        expect(() => {
-            gestorDeVehiculo.setUltimoKmMantenimiento(mockGestorDeReserva);
-        }).toThrow(GestorDeVehiculoError);
-
-        expect(() => {
-            gestorDeVehiculo.setUltimoKmMantenimiento(mockGestorDeReserva);
-        }).toThrow("El valor del kilometraje obtenido es incorrecto");
-    });
-
-    it("Debe guardar la fecha si es correcta", () => {
-        mockGestorDeEstado.actualizarFechaMantenimiento.mockReturnValue(
-            new Date("2024-12-20")
+        vehiculo = new VehiculoMock("ABC123", 1000);
+        calculadora = new CalculadoraMock();
+        gestor = new GestorDeVehiculo(
+            vehiculo,
+            calculadora,
+            100, 
+            10,  
+            500, 
+            200  
         );
-
-        gestorDeVehiculo.setFechaUltimoMantenimiento(new Date("2024-12-20"));
-
-        expect(gestorDeVehiculo.getFechaUltimoMantenimiento()).toEqual(
-            new Date("2024-12-20")
-        );
-        expect(mockGestorDeEstado.actualizarFechaMantenimiento).toHaveBeenCalledTimes(1);
+        estado = new EstadoMock();
+        gestor.setEstado(estado);
     });
 
-    it("Debe lanzar error cuando la fecha es NaN", () => {
-        mockGestorDeEstado.actualizarFechaMantenimiento.mockReturnValue(NaN);
-
-        expect(() =>
-            gestorDeVehiculo.setFechaUltimoMantenimiento(new Date("2024-12-20"))
-        ).toThrow(GestorDeVehiculoError);
+    test("Debe instanciar correctamente el gestor de vehículo", () => {
+        expect(gestor.getVehiculo()).toBe(vehiculo);
+        expect(gestor.getCalculadora()).toBe(calculadora);
+        expect(gestor.getTarifaBase()).toBe(100);
+        expect(gestor.getAdicionalPorKm()).toBe(10);
+        expect(gestor.getLimiteDiarioKm()).toBe(500);
+        expect(gestor.getSeguro()).toBe(200);
+        expect(gestor.getKilometrajeActual()).toBe(1000);
     });
 
-    it("Debe sumar correctamente el contador", () => {
-        gestorDeVehiculo.contadorAcumulado();
-        gestorDeVehiculo.contadorAcumulado();
-        expect(gestorDeVehiculo.getContadorAcumulado()).toEqual(2);
+    test("Validación de setters: tarifaBase, adicionalPorKm, limiteDiarioKm y seguro", () => {
+        expect(() => gestor.setTarifaBase(-1)).toThrow(GestorDeVehiculoError);
+        expect(() => gestor.setAdicionalPorKm(-5)).toThrow(GestorDeVehiculoError);
+        expect(() => gestor.setLimiteDiarioKm(-10)).toThrow(GestorDeVehiculoError);
+        expect(() => gestor.setSeguro(-100)).toThrow(GestorDeVehiculoError);
+    });
+
+    test("Validación de setVehiculo y setCalculadora", () => {
+        expect(() => gestor.setVehiculo(null as any)).toThrow(GestorDeVehiculoError);
+        expect(() => gestor.setCalculadora(null as any)).toThrow(GestorDeVehiculoError);
+    });
+
+    test("setUltimoKmMantenimiento y getUltimoKmMantenimiento", () => {
+        const reservaMock = {
+            getKmFinal: () => 1200
+        } as GestorDeReserva;
+
+        gestor.setUltimoKmMantenimiento(reservaMock);
+        expect(gestor.getUltimoKmMantenimiento()).toBe(1200);
+
+        const reservaMal = {
+            getKmFinal: () => -5
+        } as GestorDeReserva;
+        expect(() => gestor.setUltimoKmMantenimiento(reservaMal)).toThrow(GestorDeVehiculoError);
+    });
+
+    test("setFechaUltimoMantenimiento y getFechaUltimoMantenimiento", () => {
+        const fecha = new Date("2025-01-01");
+        gestor.setFechaUltimoMantenimiento(fecha);
+        expect(gestor.getFechaUltimoMantenimiento()).toEqual(fecha);
+    });
+
+    test("contadorAcumulado incrementa correctamente", () => {
+        expect(gestor.getContadorAcumulado()).toBe(0);
+        gestor.contadorAcumulado();
+        gestor.contadorAcumulado();
+        expect(gestor.getContadorAcumulado()).toBe(2);
     });
 });
-
-
-

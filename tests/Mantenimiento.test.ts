@@ -1,63 +1,54 @@
-import Mantenimiento from "../src/clases/Mantenimiento"
+import Mantenimiento from "../src/clases/Mantenimiento";
 import Vehiculo from "../src/clases/Vehiculo";
+import EstadoError from "../src/clasesDeError/EstadoError";
+
+class VehiculoTest extends Vehiculo {}
 
 describe("tests de la clase Mantenimiento", () => {
     let mantenimiento: Mantenimiento;
     let fechaInicio: Date;
     let fechaFin: Date;
-
-    const mockVehiculo: Vehiculo = { 
-        getKilometraje: jest.fn().mockReturnValue(5000),
-    } as unknown as Vehiculo;
+    let vehiculo: VehiculoTest;
 
     beforeEach(() => {
-        fechaInicio = new Date(2025, 10, 16);
-        fechaFin = new Date(2025, 10, 17);
-        mantenimiento = new Mantenimiento(200000, fechaInicio, fechaFin);
-    });
-
-    test("El constructor de la clase debe instanciar un objeto del tipo Mantenimiento", () => {
-        const mantenimiento2 = new Mantenimiento(2233, fechaInicio, fechaFin);
-        expect(mantenimiento2).toBeInstanceOf(Mantenimiento);
-    });
-
-    test("Debe devolver fecha inicio", () => {
-        expect(mantenimiento.getFechaInicio().getTime()).toBe(fechaInicio.getTime());
-    });
-
-    test("Debe devolver fecha fin", () => {
-        expect(mantenimiento.getFechaFin().getTime()).toBe(fechaFin.getTime());
-    });
-
-    test("Debe devolver costo", () => {
-        expect(mantenimiento.getCosto()).toBe(200000);
+        fechaInicio = new Date("2025-01-01");
+        fechaFin = new Date("2025-01-10");
+        vehiculo = new VehiculoTest("ABC123", 1000) as any;
+        mantenimiento = new Mantenimiento(500, fechaInicio, fechaFin);
     });
 
     test("Debe setear y devolver fecha inicio", () => {
-        const nuevaFechaInicio = new Date(2025, 4, 5);
+        const nuevaFechaInicio = new Date("2025-01-02");
         mantenimiento.setFechaInicio(nuevaFechaInicio);
-        expect(mantenimiento.getFechaInicio()).toBe(nuevaFechaInicio);
+        expect(mantenimiento.getFechaInicio()).toEqual(nuevaFechaInicio);
     });
 
     test("Debe setear y devolver fecha fin", () => {
-        const nuevaFechaFin = new Date(2025, 4, 10);
+        const nuevaFechaFin = new Date("2025-01-15");
         mantenimiento.setFechaFin(nuevaFechaFin);
-        expect(mantenimiento.getFechaFin()).toBe(nuevaFechaFin);
+        expect(mantenimiento.getFechaFin()).toEqual(nuevaFechaFin);
+    });
+
+    test("Debe lanzar error si fecha fin es anterior a fecha inicio", () => {
+        const fechaInvalida = new Date("2024-12-31");
+        expect(() => mantenimiento.setFechaFin(fechaInvalida)).toThrowError(EstadoError);
+        expect(() => mantenimiento.setFechaFin(fechaInvalida)).toThrow("La fecha de fin no puede ser anterior a la fecha de inicio");
     });
 
     test("Debe setear y devolver costo", () => {
-        mantenimiento.setCosto(300000);
-        expect(mantenimiento.getCosto()).toBe(300000);
+        mantenimiento.setCosto(750);
+        expect(mantenimiento.getCosto()).toBe(750);
     });
 
-    test (" agregarVehiculo() - Debe agregar un vehiculo al MAP de estado", () => {
-        mantenimiento.agregarVehiculo("ABC123", mockVehiculo);
-        expect(mantenimiento.getVehiculos().has("ABC123")).toBe(true);
+    test("Debe agregar, consultar y quitar vehículos correctamente", () => {
+        mantenimiento.agregarVehiculo("XYZ789", vehiculo);
+        expect(mantenimiento.consultarEstado("XYZ789")).toBe(true);
+        expect(mantenimiento.quitarVehiculo("XYZ789")).toBe(true);
+        expect(mantenimiento.consultarEstado("XYZ789")).toBe(false);
     });
 
-    test (" quitarVehiculo() - Debe quitar un vehiculo al MAP de estado", () => {
-        mantenimiento.agregarVehiculo("ABC123", mockVehiculo);
-        mantenimiento.quitarVehiculo("ABC123");
-        expect(mantenimiento.getVehiculos().size).toBe(0);    
-    })
+    test("getUltimoMantenimientoKm y getUltimoMantenimientoFecha devuelven valores", () => {
+        expect(mantenimiento.getUltimoMantenimientoKm()).toBe(1);
+        expect(mantenimiento.getUltimoMantenimientoFecha()).toBeInstanceOf(Date);
+    });
 });

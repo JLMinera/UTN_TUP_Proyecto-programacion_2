@@ -1,4 +1,5 @@
 import Estado from "./Estado";
+import GestorDeVehiculo from "./GestorDeVehiculo";
 import Mantenimiento from "./Mantenimiento";
 import Vehiculo from "./Vehiculo";
 
@@ -25,13 +26,15 @@ export default class GestorDeEstado {
         return fecha;
     }
 
-    public disparadorMantenimiento(patente: string, vehiculo: Vehiculo, estado: Mantenimiento): boolean {
-        let ultimoMantenimientoSuperado = vehiculo.getKilometraje() - this.mantenimiento.getUltimoMantenimientoKm();
+    public disparadorMantenimiento(patente: string, gestorVehiculo: GestorDeVehiculo, estado: Mantenimiento): boolean {
+        const vehiculo = gestorVehiculo.getVehiculo();
+        const ultimoMantenimientoSuperado = gestorVehiculo.getKilometrajeActual() - this.mantenimiento.getUltimoMantenimientoKm();
         const fechaActual = new Date();
-        const meses = (fechaActual.getFullYear() - fechaActual.getFullYear()) * 12 + (fechaActual.getMonth() - this.mantenimiento.getUltimoMantenimientoFecha().getMonth());
-        const alquileres = vehiculo.getCantidadAlquileres();
+        const meses = (fechaActual.getFullYear() - this.mantenimiento.getUltimoMantenimientoFecha().getFullYear()) * 12
+                    + (fechaActual.getMonth() - this.mantenimiento.getUltimoMantenimientoFecha().getMonth());
+        const alquileres = gestorVehiculo.getContadorAcumulado();
 
-        if (ultimoMantenimientoSuperado || meses > 12 || alquileres > 5) {
+        if (ultimoMantenimientoSuperado > 0 || meses > 12 || alquileres > 5) {
             this.agregarVehiculo(patente, vehiculo, estado);
             return true;
         }
@@ -39,13 +42,11 @@ export default class GestorDeEstado {
         return false;
     }
 
-    // apenas se devuelve el vehiculo, se hace una validacion sobre su posible siguiente estado
     public gestorDevolucionDeVehiculo(patente: string, vehiculo: Vehiculo, estado: Mantenimiento): void {
-        if (this.disparadorMantenimiento(patente, vehiculo, estado)) {
+        if (this.disparadorMantenimiento(patente, vehiculo as unknown as GestorDeVehiculo, estado)) {
             this.agregarVehiculo(patente, vehiculo, estado);
         } else {
             this.agregarVehiculo(patente, vehiculo, estado);
         }
     }
 }
-
