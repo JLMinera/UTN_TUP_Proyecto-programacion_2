@@ -1,98 +1,100 @@
-import GestorDeReserva from "../src/clases/GestorDeReserva"
-import GestorVehiculo from "../src/clases/GestorDeVehiculo";
+import GestorDeReserva from "../src/clases/GestorDeReserva";
+import GestorDeReservaError from "../src/clasesDeError/GestorDeReservaError";
+import Reserva from "../src/clases/Reserva";
+import Temporada from "../src/clases/Temporada";
 import Cliente from "../src/clases/Cliente";
-import Temporada from "../src/clases/Temporada"
+import GestorDeVehiculo from "../src/clases/GestorDeVehiculo";
 
-describe("Test clase GestorDeReserva", ( )=> {
+class VehiculoMock extends GestorDeVehiculo {
+    private kmActual: number;
+    private calculadoraMock: any;
 
-    let gestorReserva: GestorDeReserva;
-    const mockVehiculo: GestorVehiculo = { 
-         getKilometrajeActual: jest.fn().mockReturnValue(5000),
-    } as unknown as GestorVehiculo;
+    constructor(km: number) {
+        super({patente: "ABC123", kilometraje: km
+        } as any, 
+        {
+          calcularTarifaTotal: jest.fn().mockReturnValue(1000)
+        } as any, 
+        100, 10, 500, 200);
+        this.kmActual = km;
+        this.calculadoraMock = {
+            calcularTarifaTotal: jest.fn().mockReturnValue(1000)
+        };
+    }
 
-    const mockCliente: Cliente = {
+    getKilometrajeActual(): number {
+        return this.kmActual;
+    }
 
-    } as unknown as Cliente;
+    getCalculadora() {
+        return this.calculadoraMock;
+    }
 
-    const mockTemporada: Temporada = {
+    setKilometrajeActual(km: number) {
+        this.kmActual = km;
+    }
+}
 
-    } as unknown as Temporada;
+class TemporadaMock extends Temporada {
+    constructor(fechaInicio: Date, fechaFin: Date, recargo: number) {
+        super(new Date("2025-01-01"), new Date("2025-01-10"), 0.90);
+    }
+}
+
+describe("GestorDeReserva", () => {
+    let cliente: Cliente;
+    let reserva: Reserva;
+    let vehiculo: VehiculoMock;
+    let temporada: Temporada;
+    let gestor: GestorDeReserva;
 
     beforeEach(() => {
-        let fechaInicio = new Date(2025, 10, 16);
-        let fechaFin = new Date(2025, 10, 17);
-
-        gestorReserva = new GestorDeReserva(mockVehiculo, mockCliente, fechaInicio, fechaFin, mockTemporada);
+        cliente = new Cliente("Juan", "Perez", 123);
+        reserva = new Reserva(cliente, new Date("2025-01-01"), new Date("2025-01-10"));
+        vehiculo = new VehiculoMock(1000);
+        temporada = new TemporadaMock(new Date("2025-01-01"), new Date("2025-01-10"), 0.90);
+        gestor = new GestorDeReserva(vehiculo, reserva, temporada);
     });
 
-    afterEach(() => {});
-
-    it("El constructor de la clase debe instanciar un objeto del tipo GestorDeReserva", () => {
-        expect(gestorReserva).toBeInstanceOf(GestorDeReserva);
+    test("Debe instanciar correctamente el gestor de reserva", () => {
+        expect(gestor.getCliente()).toBe(cliente);
+        expect(gestor.getVehiculo()).toBe(vehiculo);
+        expect(gestor.getTemporada()).toBe(temporada);
+        expect(gestor.getKmInicial()).toBe(1000);
     });
 
-    it("Debe devolver el kilometro inicial", () => {
-        expect(gestorReserva.getKilometrajeInicial()).toEqual(5000);
+    test("No se puede asignar kilometraje inicial negativo", () => {
+        expect(() => gestor.setKmInicial(-5)).toThrow(GestorDeReservaError);
+        expect(() => gestor.setKmInicial(-5)).toThrow("El kilometraje inicial no puede ser negativo");
     });
 
-    it("Debe devolver el kilometro final", () => {
-        expect(gestorReserva.getKilometrajeFinal()).toEqual(5000);
+    test("No se puede asignar kilometraje final menor al inicial", () => {
+        expect(() => gestor.setKmFinal(900)).toThrow(GestorDeReservaError);
+        expect(() => gestor.setKmFinal(900)).toThrow("El kilometraje final no puede ser menor que el inicial");
     });
 
-    it("Debe devolver la distancia recorrida", () => {
-        expect(gestorReserva.getDistanciaRecorrida()).toEqual(0);
+    test("Devuelve correctamente la distancia recorrida después de devolver vehículo", () => {
+        vehiculo.setKilometrajeActual(1200);
+        gestor.setVehiculoDevuelto();
+        expect(gestor.getKmFinal()).toBe(1200);
+        expect(gestor.getDistanciaRecorrida()).toBe(200);
     });
 
-   /* it("Debe devolver el cliente asociado", () => {
-        expect(gestorReserva.getCliente()).toBeInstanceOf(Cliente);
-    });*/
-
-    it("Debe devolver false si el vehiculo no fue devuelto", () => {
-        expect(gestorReserva.getVehiculoDevuelto()).toEqual(false);
+    test("No se puede calcular tarifa antes de devolver vehículo", () => {
+        expect(() => gestor.tarifaFinalDeReserva()).toThrow(GestorDeReservaError);
+        expect(() => gestor.tarifaFinalDeReserva()).toThrow("No se puede calcular la tarifa antes de devolver el vehículo");
     });
 
-    it("Debe establecer el kilometro inicial", () => {
-        gestorReserva.setKilometrajeInicial(10000);
-
-        expect(gestorReserva["kilometrajeInicial"]).toEqual(10000);
+    test("Calculo de tarifa después de devolver vehículo", () => {
+        vehiculo.setKilometrajeActual(1200);
+        gestor.setVehiculoDevuelto();
+        const total = gestor.tarifaFinalDeReserva();
+        expect(total).toBe(1000);
     });
 
-    it("Debe establecer el kilometro final", () => {
-        gestorReserva.setKilometrajeFinal(20000);
-
-        expect(gestorReserva["kilometrajeFinal"]).toEqual(20000);
+    test("No se puede devolver el vehículo dos veces", () => {
+        gestor.setVehiculoDevuelto();
+        expect(() => gestor.setVehiculoDevuelto()).toThrow(GestorDeReservaError);
+        expect(() => gestor.setVehiculoDevuelto()).toThrow("El vehículo ya fue devuelto");
     });
-
-    it("Debe establecer el la distancia recorrida", () => {
-        gestorReserva.setDistanciaRecorrida(100000);
-
-        expect(gestorReserva["distanciaRecorrida"]).toEqual(100000);
-    });
-
-    it("Debe establecer que el vehículo fue devuelto", () => {
-        gestorReserva.setVehiculoDevuelto();
-
-        expect(gestorReserva["vehiculoDevuelto"]).toEqual(true);
-    });
-
-    it("Debe manetener el mismo valor inicial de kilometraje", () => {
-        gestorReserva.setVehiculoDevuelto();
-
-        expect(gestorReserva["kilometrajeInicial"]).toEqual(5000);
-    });
-
-    it("Debe establecer un nuevo valor al kilometro final", () => {
-        (mockVehiculo.getKilometrajeActual as jest.Mock).mockReturnValue(10800);
-        gestorReserva.setVehiculoDevuelto();
-
-        expect(gestorReserva["kilometrajeFinal"]).toEqual(10800);
-    });
-
-  /*  it("Debe establecer un nuevo valor de distancia recorrida", () => {
-        (mockVehiculo.getKilometraje as jest.Mock).mockReturnValue(10800);
-        gestorReserva.setVehiculoDevuelto();
-
-        expect(gestorReserva["distanciaRecorrida"]).toEqual(5800);
-    });*/
-
 });

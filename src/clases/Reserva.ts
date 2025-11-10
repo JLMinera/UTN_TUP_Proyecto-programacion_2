@@ -1,15 +1,25 @@
 import Cliente from "./Cliente";
 import Estado from "./Estado";
 import Vehiculo from "./Vehiculo";
+import ReservaError from "../clasesDeError/ReservaError";
 
 export default class Reserva extends Estado {
-    public cliente: Cliente;
+    private cliente!: Cliente;
     private static vehiculosEnReserva: Map<string, Vehiculo> = new Map();
 
     constructor(cliente: Cliente, fechaInicio: Date, fechaFin: Date) {
         super(fechaInicio, fechaFin);
-        this.fechaInicio = fechaInicio;
-        this.fechaFin = fechaFin;
+        this.setCliente(cliente);
+    }
+
+    public getCliente(): Cliente {
+        return this.cliente;
+    }
+
+    public setCliente(cliente: Cliente): void {
+        if (!cliente) {
+            throw new ReservaError("El cliente no puede ser nulo");
+        }
         this.cliente = cliente;
     }
 
@@ -17,21 +27,25 @@ export default class Reserva extends Estado {
         return Reserva.vehiculosEnReserva;
     }
 
+    public agregarVehiculo(patente: string, vehiculo: Vehiculo): void {
+        if (!vehiculo || !patente) {
+            throw new ReservaError("No se puede agregar un vehículo inválido");
+        }
+        Reserva.vehiculosEnReserva.set(patente, vehiculo);
+    }
+
     public quitarVehiculo(patente: string): boolean {
-        if (this.getVehiculos().has(patente)) {
-            this.getVehiculos().delete(patente);
-            //console.log(`Vehículo con patente ${patente} eliminado correctamente.`);
+        if (Reserva.vehiculosEnReserva.has(patente)) {
+            Reserva.vehiculosEnReserva.delete(patente);
             return true;
         } else {
-            throw new Error(`No se encontró ningún vehículo con patente ${patente} para eliminar.`);
+            throw new ReservaError(
+                `No se encontró ningún vehículo con patente ${patente}`
+            );
         }
     }
 
     public consultarEstado(patente: string): boolean {
-        return this.getVehiculos().has(patente);
-    }
-
-    public agregarVehiculo(patente: string, vehiculo: Vehiculo): void {
-        this.getVehiculos().set(patente, vehiculo);
+        return Reserva.vehiculosEnReserva.has(patente);
     }
 }

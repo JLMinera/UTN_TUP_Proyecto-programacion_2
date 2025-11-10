@@ -1,17 +1,15 @@
 import CalculadoraDeTarifa from "./CalculadoraDeTarifa";
-import GestorDeReserva from "./GestorDeReserva";
+import GestorDeVehiculo from "./GestorDeVehiculo";
 
 export default class CalculadoraCompacto extends CalculadoraDeTarifa {
-    
-    constructor(reserva: GestorDeReserva){
-        super (reserva)
-    }
-    public calcularTarifaTotal(): number{
-        let tarifaFinal: number;
-        tarifaFinal = tarifaFinal = (this.dias * (this.recargoTemporada * this.tarifaBase));
 
-        if ((this.kmRecorridos/this.dias) > this.reserva.getVehiculo().getLimiteDiarioKm()) {
-            tarifaFinal = tarifaFinal + (this.adicionalPorKm * this.kmRecorridos)
+    public calcularTarifaTotal(fechaInicio: Date, fechaFin: Date, kmTotales: number, vehiculo:GestorDeVehiculo, recargoTemporada: number): number{
+        let dias: number = this.diasTotales(fechaInicio, fechaFin);
+        let tarifaFinal: number = 0;
+        tarifaFinal = tarifaFinal = (dias * (recargoTemporada * vehiculo.getTarifaBase()));
+
+        if ((kmTotales/dias) > vehiculo.getLimiteDiarioKm()) {
+            tarifaFinal = tarifaFinal + (vehiculo.getAdicionalPorKm() * kmTotales)
         }
         return tarifaFinal
     }

@@ -1,64 +1,55 @@
-import Cliente from "./Cliente"
-import Vehiculo from "./Vehiculo"
-import Temporada from "./Temporada"
+import GestorDeReservaError from "../clasesDeError/GestorDeReservaError";
+import Reserva from "./Reserva";
+import Temporada from "./Temporada";
 import GestorDeVehiculo from "./GestorDeVehiculo";
+import Cliente from "./Cliente";
 
 export default class GestorDeReserva {
-    private kilometrajeInicial: number;
-    private kilometrajeFinal: number;
-    private distanciaRecorrida: number;
+    private kmInicial!: number;
+    private kmFinal!: number;
     private vehiculo: GestorDeVehiculo;
-    private cliente: Cliente;
-    private vehiculoDevuelto: boolean;
-    private fechaInicio: Date;
-    private fechaFin: Date;
-    //REVISAR LA TEMPORADA LE PONGO STRING PARA ASIGNAR VALOR Y QUE NO ROMPA)
+    private vehiculoDevuelto: boolean = false;
+    private reserva: Reserva;
     private temporada: Temporada;
-    private tarifaFinal: number;
 
-    constructor(vehiculo: GestorDeVehiculo, cliente: Cliente, fechaInicio: Date, fechaFin: Date, temporada: Temporada) {
-        this.cliente = cliente;
+    constructor(vehiculo: GestorDeVehiculo, reserva: Reserva, temporada: Temporada) {
         this.vehiculo = vehiculo;
-        this.fechaInicio = fechaInicio;
-        this.fechaFin = fechaFin;
-        this.kilometrajeInicial = vehiculo.getKilometrajeActual();
-        this.kilometrajeFinal = vehiculo.getKilometrajeActual();
-        this.distanciaRecorrida = this.kilometrajeFinal - this.kilometrajeInicial;
-        this.vehiculoDevuelto = false;
-        this.temporada = temporada;//Metodo para obtener la temporada;
-        this.tarifaFinal = -1;
+        this.reserva = reserva;
+        this.temporada = temporada;
+        this.setKmInicial(vehiculo.getKilometrajeActual());
     }
 
-    public setKilometrajeInicial(data: number) {
-        this.kilometrajeInicial = data;
+    public setKmInicial(data: number) {
+        if (data < 0) {
+            throw new GestorDeReservaError("El kilometraje inicial no puede ser negativo");
+        }
+        this.kmInicial = data;
     }
 
-    public getKilometrajeInicial(): number {
-        return this.kilometrajeInicial;
+    public getKmInicial(): number {
+        return this.kmInicial;
     }
 
-    public setKilometrajeFinal(data: number) {
-        this.kilometrajeFinal = data;
+    public setKmFinal(data: number) {
+        if (data < this.kmInicial) {
+            throw new GestorDeReservaError("El kilometraje final no puede ser menor que el inicial");
+        }
+        this.kmFinal = data;
     }
 
-    public getKilometrajeFinal(): number {
-        return this.kilometrajeFinal;
-    }
-
-    public setDistanciaRecorrida(data: number) {
-        this.distanciaRecorrida = data;
+    public getKmFinal(): number {
+        return this.kmFinal;
     }
 
     public getDistanciaRecorrida(): number {
-        return this.distanciaRecorrida;
+        if (this.kmFinal === undefined) {
+            throw new GestorDeReservaError("El kilometraje final aún no fue registrado");
+        }
+        return this.kmFinal - this.kmInicial;
     }
 
     public getCliente(): Cliente {
-        return this.cliente;
-    }
-
-    public setCliente(data: Cliente) {
-        this.cliente = data;
+        return this.reserva.getCliente();
     }
 
     public getVehiculo(): GestorDeVehiculo {
@@ -73,40 +64,42 @@ export default class GestorDeReserva {
         return this.vehiculoDevuelto;
     }
 
-    public setFechaInicio(data: Date) {
-        this.fechaInicio = data;
-    }
-
     public getFechaInicio(): Date {
-        return this.fechaInicio;
-    }
-
-    public setFechaFin(data: Date) {
-        this.fechaFin = data;
+        return this.reserva.getFechaInicio();
     }
 
     public getFechaFin(): Date {
-        return this.fechaFin;
+        return this.reserva.getFechaFin();
     }
 
-    public setTemporada(data: Temporada){
+    public setTemporada(data: Temporada) {
         this.temporada = data;
     }
-    public getTemporada(): Temporada{
+
+    public getTemporada(): Temporada {
         return this.temporada;
     }
 
-    public setVehiculoDevuelto() {
+    public setVehiculoDevuelto(): void {
+        if (this.vehiculoDevuelto) {
+            throw new GestorDeReservaError("El vehículo ya fue devuelto");
+        }
         this.vehiculoDevuelto = true;
 
-        this.kilometrajeFinal = this.vehiculo.getKilometrajeActual();
-        this.distanciaRecorrida = this.kilometrajeFinal - this.kilometrajeInicial;
+        this.setKmFinal(this.vehiculo.getKilometrajeActual());
     }
 
-    public tarifaFinalDeReserva(vehiculo: GestorDeVehiculo): number{
-    let total: number = 0;
-    total = vehiculo.getCalculadora().calcularTarifaTotal(this.getFechaInicio(), this.getFechaFin(), this.getDistanciaRecorrida(), this.getVehiculo(), this.getTemporada().getRecargo())
-    return total;
-    }
+    public tarifaFinalDeReserva(): number {
+        if (!this.vehiculoDevuelto) {
+            throw new GestorDeReservaError("No se puede calcular la tarifa antes de devolver el vehículo");
+        }
 
+        return this.vehiculo.getCalculadora().calcularTarifaTotal(
+            this.getFechaInicio(),
+            this.getFechaFin(),
+            this.getDistanciaRecorrida(),
+            this.getVehiculo(),
+            this.getTemporada().getRecargo()
+        );
+    }
 }

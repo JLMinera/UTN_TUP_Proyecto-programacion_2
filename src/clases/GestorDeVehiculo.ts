@@ -5,31 +5,31 @@ import GestorDeEstado from "./GestorDeEstado";
 import CalculadoraDeTarifa from "./CalculadoraDeTarifa";
 
 export default class GestorDeVehiculo {
-    private vehiculo: Vehiculo;
+    private vehiculo!: Vehiculo;
     private estado!: GestorDeEstado;
     private ultimoKmMantenimiento!: number;
     private fechaUltimoMantenimiento!: Date;
     private contador: number;
-    private calculadora: CalculadoraDeTarifa;
-    private tarifaBase: number;
-    private adicionalPorKm: number;
-    private limiteDiarioKm: number;
-    private seguro: number;
+    private calculadora!: CalculadoraDeTarifa;
+    private tarifaBase!: number;
+    private adicionalPorKm!: number;
+    private limiteDiarioKm!: number;
+    private seguro!: number;
 
     constructor(vehiculo: Vehiculo, calculadora: CalculadoraDeTarifa, tarifaBase: number, adicionalPorKm: number, limiteDiarioKm: number, seguro: number) {
-        this.vehiculo = vehiculo;
         this.contador = 0;
-        this.calculadora =  calculadora;        
-        this.tarifaBase = tarifaBase;
-        this.adicionalPorKm = adicionalPorKm;
-        this.seguro = seguro;
-        this.limiteDiarioKm = limiteDiarioKm;
+        this.setVehiculo(vehiculo);
+        this.setCalculadora(calculadora);
+        this.setTarifaBase(tarifaBase);
+        this.setAdicionalPorKm(adicionalPorKm);
+        this.setLimiteDiarioKm(limiteDiarioKm);
+        this.setSeguro(seguro);
     }
 
     public setUltimoKmMantenimiento(data: GestorDeReserva): void {
-        const kmMantenimiento = data.getKilometrajeFinal();
+        const kmMantenimiento = data.getKmFinal();
         if (!Number.isInteger(kmMantenimiento) || kmMantenimiento <= 0) {
-            throw new GestorDeVehiculoError("El valor del kilometraje obtenido es incorrecto")
+            throw new GestorDeVehiculoError("El valor del kilometraje obtenido es incorrecto");
         }
         this.ultimoKmMantenimiento = kmMantenimiento;
     }
@@ -40,11 +40,10 @@ export default class GestorDeVehiculo {
 
     public setFechaUltimoMantenimiento(fecha: Date): void {
         const fechaUltimoMantenimiento = this.estado.actualizarFechaMantenimiento(fecha);
-        if (Number.isNaN(fechaUltimoMantenimiento)) {
-            throw new GestorDeVehiculoError("La fecha proporcionada no es valida")
+        if (Number.isNaN(fechaUltimoMantenimiento.getTime())) {
+            throw new GestorDeVehiculoError("La fecha proporcionada no es válida");
         }
         this.fechaUltimoMantenimiento = fechaUltimoMantenimiento;
-
     }
 
     public getFechaUltimoMantenimiento(): Date {
@@ -60,49 +59,73 @@ export default class GestorDeVehiculo {
     }
 
     public setTarifaBase(data: number) {
+        if (!Number.isFinite(data) || data < 0) {
+            throw new GestorDeVehiculoError("La tarifa base debe ser un número mayor o igual a 0");
+        }
         this.tarifaBase = data;
-    }
-    public getTarifaBase(): number {
-        return this.tarifaBase;
-    }
-
-    public setSeguro(data: number) {
-        this.seguro = data;
-    }
-    public getSeguro(): number {
-        return this.seguro;
-    }
-
-    public setVehiculo(data: Vehiculo) {
-        this.vehiculo = data;
-    }
-    public getVehiculo(): Vehiculo {
-        return this.vehiculo;
     }
 
     public setAdicionalPorKm(data: number) {
-        this.seguro = data;
+        if (!Number.isFinite(data) || data < 0) {
+            throw new GestorDeVehiculoError("El adicional por km debe ser un número mayor o igual a 0");
+        }
+        this.adicionalPorKm = data;
     }
-    public getAdicionalPorKm(): number {
-        return this.seguro;
-    }
-    
+
     public setLimiteDiarioKm(data: number) {
+        if (!Number.isFinite(data) || data < 0) {
+            throw new GestorDeVehiculoError("El límite diario de km debe ser un número mayor o igual a 0");
+        }
+        this.limiteDiarioKm = data;
+    }
+
+    public setSeguro(data: number) {
+        if (!Number.isFinite(data) || data < 0) {
+            throw new GestorDeVehiculoError("El seguro debe ser un número mayor o igual a 0");
+        }
         this.seguro = data;
     }
-    public getLimiteDiarioKm(): number {
-        return this.seguro;
+
+    public setVehiculo(data: Vehiculo) {
+        if (!data) throw new GestorDeVehiculoError("El vehículo no puede ser null");
+        this.vehiculo = data;
     }
-    
+
     public setCalculadora(data: CalculadoraDeTarifa) {
+        if (!data) throw new GestorDeVehiculoError("La calculadora no puede ser null");
         this.calculadora = data;
     }
-    public getCalculadora(): CalculadoraDeTarifa {
-        return this.calculadora;
+
+    public setEstado(data: GestorDeEstado) {
+        if (!data) throw new GestorDeVehiculoError("El estado no puede ser null");
+        this.estado = data;
     }
 
-      public getKilometrajeActual(): number {
-        return this.getVehiculo().getKilometraje();
+    public getTarifaBase(): number { 
+        return this.tarifaBase; 
     }
 
+    public getAdicionalPorKm(): number { 
+        return this.adicionalPorKm; 
+    }
+
+    public getLimiteDiarioKm(): number { 
+        return this.limiteDiarioKm; 
+    }
+
+    public getSeguro(): number { 
+        return this.seguro; 
+    }
+
+    public getVehiculo(): Vehiculo { 
+        return this.vehiculo; 
+    }
+
+    public getCalculadora(): CalculadoraDeTarifa { 
+        return this.calculadora; 
+    }
+
+    public getKilometrajeActual(): number {
+         return this.vehiculo.getKilometraje(); 
+    }
 }
