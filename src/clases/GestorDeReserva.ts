@@ -11,6 +11,7 @@ export default class GestorDeReserva {
     private vehiculoDevuelto: boolean = false;
     private reserva: Reserva;
     private temporada: Temporada;
+    private costoTotal: number = 0;
 
     constructor(vehiculo: GestorDeVehiculo, reserva: Reserva, temporada: Temporada) {
         this.vehiculo = vehiculo;
@@ -78,6 +79,17 @@ export default class GestorDeReserva {
 
     public getTemporada(): Temporada {
         return this.temporada;
+    }
+
+    public setCostoTotal(data: number) {
+        if (data < 0) {
+            throw new GestorDeReservaError("El costo total no puede ser negativo");
+        }
+        this.costoTotal = data;
+    }
+
+    public getCostoTotal(): number {
+        return this.costoTotal;
     }
 
     public setVehiculoDevuelto(): void {

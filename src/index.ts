@@ -1,45 +1,26 @@
-console.log("Proyecto DriveHub TP");
-/*
-    
-    
-    public instanciarVehiculo(): void{
-    
-    //new Vehiculo instanciar un vehiculo con su constructor
-    // => gestor de vehiculo;
-    
-    return;
+import { instanciarCliente } from "./functions/instanciarCliente";
+import { instanciarSuv } from "./functions/InstanciarVehiculo";
+
+
+function main() {
+
+    try {
+        const cliente = instanciarCliente("Franco", "Colapinto", 35789243);
+
+
+    } catch (error) {
+        console.error("No se pudo crear el cliente", (error as Error).message);
     }
 
-    public instaciarCliente(): void{
-    
-    }
+}
 
-    public instanciarReserva(): void{
-    //new reserva con sus fechas, cliente y gestor de vehículo (su vehiculo)
-
-    //gestor de reserva => metodo que con las fechas de la reserva calcule la temporada 
-    
-    => GestorDeReserva()
-    
-    }
+try {
+    const ToyotaCorolla = instanciarSuv("ABC123", 0, 80, 0.25, 500, 15);
 
 
-    public cerrarReserva() {
-    
-    gestorDeReserva.devolverVehiculo()
-
-    gestorDeReserva.calcularTarifaFinal()
-
-    }
-
-    public cambioDeEstado() {
-    
-    //llamar a los métodos que validan las condiciones para saber si el vehículo tiene que ir a mantenimiento o a NecesitaLimpieza
-    => si va a mantenimiento => gestorDeVehiculo.SetFechaUltimoMantenimiento(mantenimiento.GetFechaFin)
-    // Sino va a necesita limpieza
-
-    //de cualquier manera, post 24h gestorDeVehiculo.setEstado(Disponible)
-    }
+} catch (error) {
+    console.error("No se pudo crear el vehiculo", (error as Error).message);
+}
 
 
-*/
+main();

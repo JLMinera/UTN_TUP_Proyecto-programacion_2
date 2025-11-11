@@ -46,11 +46,4 @@ export default class Mantenimiento extends Estado {
         this.getVehiculos().set(patente, vehiculo);
     }
 
-    public getUltimoMantenimientoKm(): number {
-        return 1;
-    }
-
-    public getUltimoMantenimientoFecha(): Date {
-        return new Date();
-    }
 }
