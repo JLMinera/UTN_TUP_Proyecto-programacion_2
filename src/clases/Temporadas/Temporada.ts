@@ -1,4 +1,4 @@
-import TemporadaError from "../clasesDeError/TemporadaError";
+import TemporadaError from "../../clasesDeError/TemporadaError";
 
 export default abstract class Temporada {
     protected fechaInicio!: Date;
