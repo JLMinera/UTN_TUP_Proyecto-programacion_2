@@ -1,5 +1,5 @@
 import CalculadoraDeTarifa from "./CalculadoraDeTarifa";
-import GestorDeVehiculo from "./GestorDeVehiculo";
+import GestorDeVehiculo from "../GestorDeVehiculo";
 
 export default class CalculadoraSedan extends CalculadoraDeTarifa {
 

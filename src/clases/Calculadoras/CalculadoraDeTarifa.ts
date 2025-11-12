@@ -1,5 +1,5 @@
-import GestorDeVehiculo from "./GestorDeVehiculo";
-import CalculadoraError from "../clasesDeError/CalculadoraError";
+import GestorDeVehiculo from "../GestorDeVehiculo";
+import CalculadoraError from "../../clasesDeError/CalculadoraError";
 export default abstract class CalculadoraDeTarifa {
 
     public abstract calcularTarifaTotal(fechaInicio: Date, fechaFin: Date, kmTotales: number, vehiculo:GestorDeVehiculo, recargoTemporada: number): number;
