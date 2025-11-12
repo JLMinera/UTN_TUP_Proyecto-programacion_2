@@ -1,12 +1,14 @@
 import GestorDeVehiculoError from "../clasesDeError/GestorDeVehiculoError";
 import GestorDeReserva from "./GestorDeReserva";
-import Vehiculo from "./Vehiculo";
+import Vehiculo from "./Vehiculos/Vehiculo";
 import GestorDeEstado from "./GestorDeEstado";
-import CalculadoraDeTarifa from "./CalculadoraDeTarifa";
+import CalculadoraDeTarifa from "./Calculadoras/CalculadoraDeTarifa";
+import EstadoVehiculo from "../interfaz/EstadoVehiculo";
+import EstadoDisponible from "./Estados/EstadoMantenimiento";
 
 export default class GestorDeVehiculo {
     private vehiculo!: Vehiculo;
-    private estado!: GestorDeEstado;
+    private estado!: EstadoVehiculo;
     private ultimoKmMantenimiento!: number;
     private fechaUltimoMantenimiento!: Date;
     private contador: number;
@@ -18,6 +20,7 @@ export default class GestorDeVehiculo {
 
     constructor(vehiculo: Vehiculo, calculadora: CalculadoraDeTarifa, tarifaBase: number, adicionalPorKm: number, limiteDiarioKm: number, seguro: number) {
         this.contador = 0;
+        this.setEstado(new EstadoDisponible());
         this.setVehiculo(vehiculo);
         this.setCalculadora(calculadora);
         this.setTarifaBase(tarifaBase);
@@ -96,7 +99,7 @@ export default class GestorDeVehiculo {
         this.calculadora = data;
     }
 
-    public setEstado(data: GestorDeEstado) {
+    public setEstado(data: EstadoVehiculo) {
         if (!data) throw new GestorDeVehiculoError("El estado no puede ser null");
         this.estado = data;
     }
