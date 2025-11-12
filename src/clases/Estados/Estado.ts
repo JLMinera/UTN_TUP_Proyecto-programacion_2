@@ -1,5 +1,5 @@
-import Vehiculo from "./Vehiculo";
-import EstadoError from "../clasesDeError/EstadoError";
+import Vehiculo from "../Vehiculos/Vehiculo";
+import EstadoError from "../../clasesDeError/EstadoError";
 
 export default abstract class Estado {
     protected fechaInicio!: Date;

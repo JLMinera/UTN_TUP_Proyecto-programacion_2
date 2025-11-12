@@ -1,6 +1,6 @@
 import Estado from "./Estado";
-import Vehiculo from "./Vehiculo";
-import DisponibleError from "../clasesDeError/DisponibleError";
+import Vehiculo from "../Vehiculos/Vehiculo";
+import DisponibleError from "../../clasesDeError/DisponibleError";
 
 export default class Disponible extends Estado {
     private static vehiculosDisponibles: Map<string, Vehiculo> = new Map();

@@ -1,6 +1,6 @@
 import Estado from "./Estado";
-import Vehiculo from "./Vehiculo";
-import NecesitaLimpiezaError from "../clasesDeError/NecesitaLimpiezaError";
+import Vehiculo from "../Vehiculos/Vehiculo";
+import NecesitaLimpiezaError from "../../clasesDeError/NecesitaLimpiezaError";
 
 export default class NecesitaLimpieza extends Estado {
     private distanciaRecorrida!: number;

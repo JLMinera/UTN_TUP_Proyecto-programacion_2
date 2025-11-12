@@ -1,7 +1,7 @@
-import Cliente from "./Cliente";
+import Cliente from "../Personas/Cliente";
 import Estado from "./Estado";
-import Vehiculo from "./Vehiculo";
-import ReservaError from "../clasesDeError/ReservaError";
+import Vehiculo from "../Vehiculos/Vehiculo";
+import ReservaError from "../../clasesDeError/ReservaError";
 
 export default class Reserva extends Estado {
     private cliente!: Cliente;

@@ -1,6 +1,6 @@
 import Estado from "./Estado";
-import Vehiculo from "./Vehiculo";
-import MantenimientoError from "../clasesDeError/MantenimientoError";
+import Vehiculo from "../Vehiculos/Vehiculo";
+import MantenimientoError from "../../clasesDeError/MantenimientoError";
 
 export default class Mantenimiento extends Estado {
     private costo: number;
