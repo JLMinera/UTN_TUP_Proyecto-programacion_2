@@ -1,4 +1,4 @@
-import VehiculoError from "../clasesDeError/VehiculoError";
+import VehiculoError from "../../clasesDeError/VehiculoError";
 
 export default abstract class Vehiculo {
 
