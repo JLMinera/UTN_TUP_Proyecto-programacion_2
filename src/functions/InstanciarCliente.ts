@@ -1,4 +1,4 @@
-import Cliente from "../clases/Cliente"
+import Cliente from "../clases/Personas/Cliente"
 
 export function instanciarCliente(nombre: string, apellido: string, dni: number): Cliente{
 

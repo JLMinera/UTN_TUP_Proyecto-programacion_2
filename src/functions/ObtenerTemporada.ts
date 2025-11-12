@@ -1,7 +1,7 @@
-import Temporada from "../clases/Temporada";
-import TemporadaAlta from "../clases/TemporadaAlta";
-import TemporadaBaja from "../clases/TemporadaBaja";
-import TemporadaMedia from "../clases/TemporadaMedia";
+import Temporada from "../clases/Temporadas/Temporada";
+import TemporadaAlta from "../clases/Temporadas/TemporadaAlta";
+import TemporadaBaja from "../clases/Temporadas/TemporadaBaja";
+import TemporadaMedia from "../clases/Temporadas/TemporadaMedia";
 import TemporadaError from "../clasesDeError/TemporadaError";
 
 export default function obtenerTemporada(fechaInicioReserva: Date): Temporada {

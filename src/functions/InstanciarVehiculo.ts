@@ -1,10 +1,10 @@
-import CalculadoraCompacto from "../clases/CalculadoraCompacto";
-import CalculadoraSedan from "../clases/CalculadoraSedan";
-import CalculadoraSuv from "../clases/CalculadoraSuv";
-import Compacto from "../clases/Compacto";
+import CalculadoraCompacto from "../clases/Calculadoras/CalculadoraCompacto";
+import CalculadoraSedan from "../clases/Calculadoras/CalculadoraSedan";
+import CalculadoraSuv from "../clases/Calculadoras/CalculadoraSuv";
+import Compacto from "../clases/Vehiculos/Compacto";
 import GestorDeVehiculo from "../clases/GestorDeVehiculo";
-import Sedan from "../clases/Sedan";
-import Suv from "../clases/Suv";
+import Sedan from "../clases/Vehiculos/Sedan";
+import Suv from "../clases/Vehiculos/Suv";
 
 export function instanciarSuv(patente: string, kilometraje: number, tarifaBase: number, adicionalPorKm: number, limiteDiarioKm: number, seguro: number): GestorDeVehiculo {
 
