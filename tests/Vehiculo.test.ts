@@ -1,4 +1,4 @@
-import Vehiculo from "../src/clases/Vehiculo";
+import Vehiculo from "../src/clases/Vehiculos/Vehiculo";
 import VehiculoError from "../src/clasesDeError/VehiculoError";
 
 class VehiculoDummy extends Vehiculo {

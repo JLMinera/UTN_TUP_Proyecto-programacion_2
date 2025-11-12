@@ -1,8 +1,8 @@
 import GestorDeVehiculo from "../src/clases/GestorDeVehiculo";
 import GestorDeVehiculoError from "../src/clasesDeError/GestorDeVehiculoError";
 import GestorDeReserva from "../src/clases/GestorDeReserva";
-import CalculadoraDeTarifa from "../src/clases/CalculadoraDeTarifa";
-import Vehiculo from "../src/clases/Vehiculo";
+import CalculadoraDeTarifa from "../src/clases/Calculadoras/CalculadoraDeTarifa";
+import Vehiculo from "../src/clases/Vehiculos/Vehiculo";
 import GestorDeEstado from "../src/clases/GestorDeEstado";
 
 class VehiculoMock extends Vehiculo {

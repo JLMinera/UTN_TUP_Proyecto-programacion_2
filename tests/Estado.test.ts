@@ -1,5 +1,5 @@
-import Estado from "../src/clases/Estado";
-import Vehiculo from "../src/clases/Vehiculo";
+import Estado from "../src/clases/Estados/Estado";
+import Vehiculo from "../src/clases/Vehiculos/Vehiculo";
 import EstadoError from "../src/clasesDeError/EstadoError";
 
 class EstadoTest extends Estado {

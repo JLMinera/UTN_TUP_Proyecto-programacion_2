@@ -1,7 +1,7 @@
 import GestorDeEstado from "../src/clases/GestorDeEstado";
 import GestorDeVehiculo from "../src/clases/GestorDeVehiculo";
-import Mantenimiento from "../src/clases/Mantenimiento";
-import Vehiculo from "../src/clases/Vehiculo";
+import Mantenimiento from "../src/clases/Estados/Mantenimiento";
+import Vehiculo from "../src/clases/Vehiculos/Vehiculo";
 
 class VehiculoDummy extends Vehiculo {
     constructor() {

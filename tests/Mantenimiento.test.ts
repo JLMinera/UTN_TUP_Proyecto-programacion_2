@@ -1,5 +1,5 @@
-import Mantenimiento from "../src/clases/Mantenimiento";
-import Vehiculo from "../src/clases/Vehiculo";
+import Mantenimiento from "../src/clases/Estados/Mantenimiento";
+import Vehiculo from "../src/clases/Vehiculos/Vehiculo";
 import EstadoError from "../src/clasesDeError/EstadoError";
 
 class VehiculoTest extends Vehiculo {}

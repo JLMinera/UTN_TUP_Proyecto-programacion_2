@@ -1,4 +1,4 @@
-import CalculadoraSedan from "../src/clases/CalculadoraSedan";
+import CalculadoraSedan from "../src/clases/Calculadoras/CalculadoraSedan";
 import GestorDeVehiculo from "../src/clases/GestorDeVehiculo";
 
 class GestorDeVehiculoDummy {

@@ -1,4 +1,4 @@
-import Suv from "../src/clases/Suv";
+import Suv from "../src/clases/Vehiculos/Suv";
 import VehiculoError from "../src/clasesDeError/VehiculoError";
 
 describe("Suv", () => {

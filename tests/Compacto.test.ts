@@ -1,4 +1,4 @@
-import Compacto from "../src/clases/Compacto";
+import Compacto from "../src/clases/Vehiculos/Compacto";
 import VehiculoError from "../src/clasesDeError/VehiculoError";
 
 describe("Compacto", () => {

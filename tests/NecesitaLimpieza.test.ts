@@ -1,5 +1,5 @@
-import NecesitaLimpieza from "../src/clases/NecesitaLimpieza";
-import Vehiculo from "../src/clases/Vehiculo";
+import NecesitaLimpieza from "../src/clases/Estados/NecesitaLimpieza";
+import Vehiculo from "../src/clases/Vehiculos/Vehiculo";
 import NecesitaLimpiezaError from "../src/clasesDeError/NecesitaLimpiezaError";
 
 class VehiculoTest extends Vehiculo {}

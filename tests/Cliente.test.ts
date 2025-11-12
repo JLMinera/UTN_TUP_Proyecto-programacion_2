@@ -1,4 +1,4 @@
-import Cliente from "../src/clases/Cliente"
+import Cliente from "../src/clases/Personas/Cliente"
 import PersonaError from "../src/clasesDeError/PersonaError";
 
 describe("Test Cliente", () => {

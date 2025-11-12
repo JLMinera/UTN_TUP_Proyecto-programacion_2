@@ -1,4 +1,4 @@
-import Sedan from "../src/clases/Sedan";
+import Sedan from "../src/clases/Vehiculos/Sedan";
 import VehiculoError from "../src/clasesDeError/VehiculoError";
 
 describe("Sedan", () => {

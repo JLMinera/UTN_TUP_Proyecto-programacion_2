@@ -1,6 +1,6 @@
-import Reserva from "../src/clases/Reserva";
-import Cliente from "../src/clases/Cliente";
-import Vehiculo from "../src/clases/Vehiculo";
+import Reserva from "../src/clases/Estados/Reserva";
+import Cliente from "../src/clases/Personas/Cliente";
+import Vehiculo from "../src/clases/Vehiculos/Vehiculo";
 import ReservaError from "../src/clasesDeError/ReservaError";
 
 class VehiculoTest extends Vehiculo {

@@ -1,5 +1,5 @@
-import Disponible from "../src/clases/Disponible";
-import Vehiculo from "../src/clases/Vehiculo";
+import Disponible from "../src/clases/Estados/Disponible";
+import Vehiculo from "../src/clases/Vehiculos/Vehiculo";
 import DisponibleError from "../src/clasesDeError/DisponibleError";
 
 describe("Tests de la clase Disponible", () => {

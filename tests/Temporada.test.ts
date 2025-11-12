@@ -1,4 +1,4 @@
-import Temporada from "../src/clases/Temporada";
+import Temporada from "../src/clases/Temporadas/Temporada";
 import TemporadaError from "../src/clasesDeError/TemporadaError";
 
 class TemporadaTest extends Temporada {}

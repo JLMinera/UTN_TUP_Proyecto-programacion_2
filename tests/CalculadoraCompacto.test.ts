@@ -1,4 +1,4 @@
-import CalculadoraCompacto from "../src/clases/CalculadoraCompacto";
+import CalculadoraCompacto from "../src/clases/Calculadoras/CalculadoraCompacto";
 import GestorDeVehiculo from "../src/clases/GestorDeVehiculo";
 
 class GestorDeVehiculoDummy {

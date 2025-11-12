@@ -1,8 +1,8 @@
 import GestorDeReserva from "../src/clases/GestorDeReserva";
 import GestorDeReservaError from "../src/clasesDeError/GestorDeReservaError";
-import Reserva from "../src/clases/Reserva";
-import Temporada from "../src/clases/Temporada";
-import Cliente from "../src/clases/Cliente";
+import Reserva from "../src/clases/Estados/Reserva";
+import Temporada from "../src/clases/Temporadas/Temporada";
+import Cliente from "../src/clases/Personas/Cliente";
 import GestorDeVehiculo from "../src/clases/GestorDeVehiculo";
 
 class VehiculoMock extends GestorDeVehiculo {
