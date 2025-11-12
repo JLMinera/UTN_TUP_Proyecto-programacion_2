@@ -1,6 +1,6 @@
-import Estado from "./Estado";
+import Estado from "./Estados/Estado";
 import GestorDeVehiculo from "./GestorDeVehiculo";
-import Vehiculo from "./Vehiculo";
+import Vehiculo from "./Vehiculos/Vehiculo";
 
 export default class GestorDeEstado {
     public consultarEstado(patente: string, estado: Estado): boolean {

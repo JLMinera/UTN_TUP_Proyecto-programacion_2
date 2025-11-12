@@ -1,8 +1,8 @@
 import GestorDeReservaError from "../clasesDeError/GestorDeReservaError";
-import Reserva from "./Reserva";
-import Temporada from "./Temporada";
+import Reserva from "./Estados/Reserva";
+import Temporada from "./Temporadas/Temporada";
 import GestorDeVehiculo from "./GestorDeVehiculo";
-import Cliente from "./Cliente";
+import Cliente from "./Personas/Cliente";
 
 export default class GestorDeReserva {
     private kmInicial!: number;
