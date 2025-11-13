@@ -4,7 +4,8 @@ import Vehiculo from "./Vehiculos/Vehiculo";
 import GestorDeEstado from "./GestorDeEstado";
 import CalculadoraDeTarifa from "./Calculadoras/CalculadoraDeTarifa";
 import EstadoVehiculo from "../interfaz/EstadoVehiculo";
-import EstadoDisponible from "./Estados/EstadoMantenimiento";
+import EstadoDisponible from "./Estados/EstadoDisponible";
+import Cliente from "./Personas/Cliente";
 
 export default class GestorDeVehiculo {
     private vehiculo!: Vehiculo;
@@ -29,6 +30,30 @@ export default class GestorDeVehiculo {
         this.setSeguro(seguro);
     }
 
+    public enviarDisponible(): void {
+        this.estado.enviarDisponible(this);
+    }
+
+    public enviarReservar(cliente: Cliente, fechaInicio: Date, fechaFin: Date): void {
+        this.estado.enviarReservar(this, cliente, fechaInicio, fechaFin);
+    }
+
+    public dispararMantenimiento(costo: number, distanciaRecorrida: number, fechaInicio: Date, fechaFin: Date): void {
+        const ultimoMantenimientoKm = this.getKilometrajeActual() - this.getUltimoKmMantenimiento();
+        const fechaActual = new Date();
+        const meses = (fechaActual.getFullYear() - this.getFechaUltimoMantenimiento().getFullYear()) * 12
+                    + (fechaActual.getMonth() - this.getFechaUltimoMantenimiento().getMonth());
+        const alquileres = this.getContadorAcumulado() % 5;
+        
+        if (ultimoMantenimientoKm > 10000 || meses > 12 || alquileres === 0) {
+            this.estado.enviarMantenimiento(this, costo, fechaInicio, fechaFin);
+        }
+        else {
+            this.estado.enviarNecesitaLimpieza(this, distanciaRecorrida, fechaInicio, fechaFin);
+        }
+    }
+    
+
     public setUltimoKmMantenimiento(data: GestorDeReserva): void {
         const kmMantenimiento = data.getKmFinal();
         if (!Number.isInteger(kmMantenimiento) || kmMantenimiento <= 0) {
@@ -42,7 +67,7 @@ export default class GestorDeVehiculo {
     }
 
     public setFechaUltimoMantenimiento(fecha: Date): void {
-        const fechaUltimoMantenimiento = this.estado.actualizarFechaMantenimiento(fecha);
+        const fechaUltimoMantenimiento = this.estado.getFechaFin();
         if (Number.isNaN(fechaUltimoMantenimiento.getTime())) {
             throw new GestorDeVehiculoError("La fecha proporcionada no es válida");
         }
