@@ -1,6 +1,7 @@
 import TemporadaError from "../../clasesDeError/TemporadaError";
 
 export default abstract class Temporada {
+    
     protected fechaInicio!: Date;
     protected fechaFin!: Date;
     protected recargo!: number;

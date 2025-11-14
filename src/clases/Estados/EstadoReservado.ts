@@ -1,20 +1,20 @@
 import EstadoError from "../../clasesDeError/EstadoError";
-import ReservaError from "../../clasesDeError/ReservaError";
-import EstadoVehiculo from "../../interfaz/EstadoVehiculo";
 import GestorDeVehiculo from "../GestorDeVehiculo";
 import Cliente from "../Personas/Cliente";
 import EstadoMantenimiento from "./EstadoMantenimiento";
 import EstadoNecesitaLimpieza from "./EstadoNecesitaLimpieza";
+import Estados from "./Estados";
 
-export default class EstadoReservado implements EstadoVehiculo {
-
+export default class EstadoReservado extends Estados {
+    
     private cliente!: Cliente;
     private fechaInicio!: Date;
     private fechaFin!: Date;
-    
+
     constructor(cliente: Cliente, fechaInicio: Date, fechaFin: Date) {
+        super();
         this.setFechaInicio(fechaInicio);
-        this.setFechaFin(fechaFin);    
+        this.setFechaFin(fechaFin);
         this.setCliente(cliente);
     }
 
@@ -27,21 +27,21 @@ export default class EstadoReservado implements EstadoVehiculo {
         throw new EstadoError("Vehiculo ya se encuentra en Reservado");
     }
 
-    public enviarMantenimiento(gestorVehiculo: GestorDeVehiculo, costo: number, fechaInicio: Date, fechaFin: Date): void {
-        gestorVehiculo.setEstado(new EstadoMantenimiento(costo, fechaInicio, fechaFin));
-    }   
- 
-    public enviarNecesitaLimpieza(gestorVehiculo: GestorDeVehiculo, distanciaRecorrida: number, fechaInicio: Date, fechaFin: Date): void {
-        gestorVehiculo.setEstado(new EstadoNecesitaLimpieza(distanciaRecorrida, fechaInicio, fechaFin));
+    public enviarMantenimiento(gestorVehiculo: GestorDeVehiculo, costo: number, fecha: Date): void {
+        gestorVehiculo.setEstado(new EstadoMantenimiento(costo, fecha));
+    }
+
+    public enviarNecesitaLimpieza(gestorVehiculo: GestorDeVehiculo, distanciaRecorrida: number, fecha: Date): void {
+        gestorVehiculo.setEstado(new EstadoNecesitaLimpieza(distanciaRecorrida, fecha));
     }
 
     public getCliente(): Cliente {
         return this.cliente;
     }
-    
+
     public setCliente(cliente: Cliente): void {
         if (!cliente) {
-                throw new ReservaError("El cliente no puede ser nulo");
+            throw new EstadoError("El cliente no puede ser nulo");
         }
         this.cliente = cliente;
     }
@@ -50,17 +50,13 @@ export default class EstadoReservado implements EstadoVehiculo {
         if (isNaN(data.getTime())) {
             throw new EstadoError("La fecha de inicio no es válida");
         }
-            
-        if (this.fechaFin && data > this.fechaFin) {
-            throw new EstadoError("La fecha de inicio no puede ser posterior a la fecha de fin");
-        }
         this.fechaInicio = data;
     }
-    
+
     public getFechaInicio(): Date {
         return this.fechaInicio;
     }
-    
+
     public setFechaFin(data: Date): void {
         if (isNaN(data.getTime())) {
             throw new EstadoError("La fecha de fin no es válida");
@@ -70,8 +66,8 @@ export default class EstadoReservado implements EstadoVehiculo {
         }
         this.fechaFin = data;
     }
-    
+
     public getFechaFin(): Date {
-            return this.fechaFin;
+        return this.fechaFin;
     }
 }

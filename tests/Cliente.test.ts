@@ -1,4 +1,4 @@
-import Cliente from "../src/clases/Personas/Cliente"
+import Cliente from "../src/clases/Personas/Cliente";
 import PersonaError from "../src/clasesDeError/PersonaError";
 
 describe("Test Cliente", () => {
@@ -7,11 +7,14 @@ describe("Test Cliente", () => {
 
     beforeEach(() => {
         cliente = new Cliente("Pepito", "Lopez", 4352636);
-    })
+    });
 
     it("Debe lanzar un error si no se pasa nombre", () => {
         expect(() => cliente.setNombre("")).toThrow(PersonaError);
-        expect(() => cliente.setNombre("")).toThrow("El nombre no puede estar vacio")
+        expect(() => cliente.setNombre("")).toThrow("El nombre no puede estar vacio");
+
+        expect(() => cliente.setNombre("")).toThrow(PersonaError);
+        expect(() => cliente.setNombre("")).toThrow("El nombre no puede estar vacio");
     });
 
     it("Debe asignar el nombre correctamente si se pasa un valor válido", () => {
@@ -21,7 +24,10 @@ describe("Test Cliente", () => {
 
     it("Debe lanzar un error si no se pasa un apellido", () => {
         expect(() => cliente.setApellido("")).toThrow(PersonaError);
-        expect(() => cliente.setApellido("")).toThrow("El apellido no puede estar vacio")
+        expect(() => cliente.setApellido("")).toThrow("El apellido no puede estar vacio");
+
+        expect(() => cliente.setApellido("")).toThrow(PersonaError);
+        expect(() => cliente.setApellido("")).toThrow("El apellido no puede estar vacio");
     });
 
     it("Debe asignar el apellido correctamente si se pasa un valor válido", () => {
@@ -29,12 +35,18 @@ describe("Test Cliente", () => {
         expect(cliente.getApellido()).toEqual("Lopez");
     });
 
-    it("Debe lanzar un error si DNI esta vacio y si no es un numero entero positivo", () => {
+    it("Debe lanzar un error si DNI está vacío o no es entero positivo", () => {
         expect(() => cliente.setDni(0)).toThrow(PersonaError);
-        expect(() => cliente.setDni(0)).toThrow("El DNI no puede estar vacio y debe ser un numero positivo")
+        expect(() => cliente.setDni(0)).toThrow("El DNI no puede estar vacio y debe ser un numero positivo");
 
         expect(() => cliente.setDni(-123)).toThrow(PersonaError);
-        expect(() => cliente.setDni(-123)).toThrow("El DNI no puede estar vacio y debe ser un numero positivo")
+        expect(() => cliente.setDni(-123)).toThrow("El DNI no puede estar vacio y debe ser un numero positivo");
+
+        expect(() => cliente.setDni(NaN)).toThrow(PersonaError);
+        expect(() => cliente.setDni(NaN)).toThrow("El DNI no puede estar vacio y debe ser un numero positivo");
+
+        expect(() => cliente.setDni(Infinity)).toThrow(PersonaError);
+        expect(() => cliente.setDni(Infinity)).toThrow("El DNI no puede estar vacio y debe ser un numero positivo");
     });
 
     it("Debe asignar el DNI correctamente si se pasa un valor válido", () => {

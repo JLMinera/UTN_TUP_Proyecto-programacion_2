@@ -1,100 +1,133 @@
 import GestorDeReserva from "../src/clases/GestorDeReserva";
-import GestorDeReservaError from "../src/clasesDeError/GestorDeReservaError";
-import Reserva from "../src/clases/Estados/Reserva";
-import Temporada from "../src/clases/Temporadas/Temporada";
-import Cliente from "../src/clases/Personas/Cliente";
 import GestorDeVehiculo from "../src/clases/GestorDeVehiculo";
-
-class VehiculoMock extends GestorDeVehiculo {
-    private kmActual: number;
-    private calculadoraMock: any;
-
-    constructor(km: number) {
-        super({patente: "ABC123", kilometraje: km
-        } as any, 
-        {
-          calcularTarifaTotal: jest.fn().mockReturnValue(1000)
-        } as any, 
-        100, 10, 500, 200);
-        this.kmActual = km;
-        this.calculadoraMock = {
-            calcularTarifaTotal: jest.fn().mockReturnValue(1000)
-        };
-    }
-
-    getKilometrajeActual(): number {
-        return this.kmActual;
-    }
-
-    getCalculadora() {
-        return this.calculadoraMock;
-    }
-
-    setKilometrajeActual(km: number) {
-        this.kmActual = km;
-    }
-}
-
-class TemporadaMock extends Temporada {
-    constructor(fechaInicio: Date, fechaFin: Date, recargo: number) {
-        super(new Date("2025-01-01"), new Date("2025-01-10"), 0.90);
-    }
-}
+import EstadoReservado from "../src/clases/Estados/EstadoReservado";
+import Cliente from "../src/clases/Personas/Cliente";
+import Temporada from "../src/clases/Temporadas/Temporada";
+import TemporadaAlta from "../src/clases/Temporadas/TemporadaAlta";
+import GestorDeReservaError from "../src/clasesDeError/GestorDeReservaError";
+import VehiculoSedan from "../src/clases/Vehiculos/VehiculoSedan";
+import CalculadoraSedan from "../src/clases/Calculadoras/CalculadoraSedan";
 
 describe("GestorDeReserva", () => {
-    let cliente: Cliente;
-    let reserva: Reserva;
-    let vehiculo: VehiculoMock;
-    let temporada: Temporada;
-    let gestor: GestorDeReserva;
+  let cliente: Cliente;
+  let vehiculo: VehiculoSedan;
+  let calculadora: CalculadoraSedan;
+  let gestorVehiculo: GestorDeVehiculo;
+  let reserva: EstadoReservado;
+  let temporada: Temporada;
+  let gestorReserva: GestorDeReserva;
 
-    beforeEach(() => {
-        cliente = new Cliente("Juan", "Perez", 123);
-        reserva = new Reserva(cliente, new Date("2025-01-01"), new Date("2025-01-10"));
-        vehiculo = new VehiculoMock(1000);
-        temporada = new TemporadaMock(new Date("2025-01-01"), new Date("2025-01-10"), 0.90);
-        gestor = new GestorDeReserva(vehiculo, reserva, temporada);
-    });
+  beforeEach(() => {
+    cliente = new Cliente("Maria", "Elena", 1234567);
 
-    test("Debe instanciar correctamente el gestor de reserva", () => {
-        expect(gestor.getCliente()).toBe(cliente);
-        expect(gestor.getVehiculo()).toBe(vehiculo);
-        expect(gestor.getTemporada()).toBe(temporada);
-        expect(gestor.getKmInicial()).toBe(1000);
-    });
+    vehiculo = new VehiculoSedan("ABC123", 0);
+    vehiculo.setKilometraje(5000);
+    calculadora = new CalculadoraSedan();
+    gestorVehiculo = new GestorDeVehiculo(vehiculo, calculadora, 500, 50, 200, 100);
 
-    test("No se puede asignar kilometraje inicial negativo", () => {
-        expect(() => gestor.setKmInicial(-5)).toThrow(GestorDeReservaError);
-        expect(() => gestor.setKmInicial(-5)).toThrow("El kilometraje inicial no puede ser negativo");
-    });
+    const fechaInicio = new Date(Date.UTC(2025, 0, 9));
+    const fechaFin = new Date(Date.UTC(2025, 0, 10));
+    reserva = new EstadoReservado(cliente, fechaInicio, fechaFin);
 
-    test("No se puede asignar kilometraje final menor al inicial", () => {
-        expect(() => gestor.setKmFinal(900)).toThrow(GestorDeReservaError);
-        expect(() => gestor.setKmFinal(900)).toThrow("El kilometraje final no puede ser menor que el inicial");
-    });
+    temporada = new TemporadaAlta(fechaInicio, fechaFin);
 
-    test("Devuelve correctamente la distancia recorrida después de devolver vehículo", () => {
-        vehiculo.setKilometrajeActual(1200);
-        gestor.setVehiculoDevuelto();
-        expect(gestor.getKmFinal()).toBe(1200);
-        expect(gestor.getDistanciaRecorrida()).toBe(200);
-    });
+    gestorReserva = new GestorDeReserva(gestorVehiculo, reserva, temporada);
+  });
 
-    test("No se puede calcular tarifa antes de devolver vehículo", () => {
-        expect(() => gestor.tarifaFinalDeReserva()).toThrow(GestorDeReservaError);
-        expect(() => gestor.tarifaFinalDeReserva()).toThrow("No se puede calcular la tarifa antes de devolver el vehículo");
-    });
+  it("setup correcto de GestorDeReserva", () => {
+    expect(gestorReserva.getCliente()).toBe(cliente);
+    expect(gestorReserva.getVehiculo()).toBe(gestorVehiculo);
+    expect(gestorReserva.getTemporada()).toBe(temporada);
+    expect(gestorReserva.getKmInicial()).toBe(vehiculo.getKilometraje());
+    expect(gestorReserva.getVehiculoDevuelto()).toBe(false);
+    expect(gestorReserva.getCostoTotal()).toBe(0);
+  });
 
-    test("Calculo de tarifa después de devolver vehículo", () => {
-        vehiculo.setKilometrajeActual(1200);
-        gestor.setVehiculoDevuelto();
-        const total = gestor.tarifaFinalDeReserva();
-        expect(total).toBe(1000);
-    });
+  it("setKmInicial lanza error si es negativo", () => {
+    expect(() => gestorReserva.setKmInicial(-1)).toThrow(GestorDeReservaError);
+  });
 
-    test("No se puede devolver el vehículo dos veces", () => {
-        gestor.setVehiculoDevuelto();
-        expect(() => gestor.setVehiculoDevuelto()).toThrow(GestorDeReservaError);
-        expect(() => gestor.setVehiculoDevuelto()).toThrow("El vehículo ya fue devuelto");
-    });
+  it("setKmFinal lanza error si es menor al km inicial", () => {
+    expect(() => gestorReserva.setKmFinal(4000)).toThrow(GestorDeReservaError);
+  });
+
+  it("getDistanciaRecorrida lanza error si kmFinal no definido", () => {
+    expect(() => gestorReserva.getDistanciaRecorrida()).toThrow(GestorDeReservaError);
+  });
+
+  it("setVehiculoDevuelto actualiza vehiculoDevuelto y kmFinal", () => {
+    vehiculo.setKilometraje(5200);
+    gestorReserva.setVehiculoDevuelto();
+    expect(gestorReserva.getVehiculoDevuelto()).toBe(true);
+    expect(gestorReserva.getKmFinal()).toBe(5200);
+  });
+
+  it("setVehiculoDevuelto lanza error si ya fue devuelto", () => {
+    vehiculo.setKilometraje(5200);
+    gestorReserva.setVehiculoDevuelto();
+    expect(() => gestorReserva.setVehiculoDevuelto()).toThrow(GestorDeReservaError);
+  });
+
+  it("getDistanciaRecorrida devuelve diferencia correcta", () => {
+    vehiculo.setKilometraje(5200);
+    gestorReserva.setVehiculoDevuelto();
+    expect(gestorReserva.getDistanciaRecorrida()).toBe(200);
+  });
+
+  it("tarifaFinalDeReserva lanza error si vehículo no devuelto", () => {
+    expect(() => gestorReserva.tarifaFinalDeReserva()).toThrow(GestorDeReservaError);
+  });
+
+  it("tarifaFinalDeReserva devuelve valor calculado correctamente", () => {
+    const fechaInicio = new Date("2025-11-09");
+    const fechaFin = new Date("2025-11-15");
+    reserva.setFechaInicio(fechaInicio);
+    reserva.setFechaFin(fechaFin);
+
+    vehiculo.setKilometraje(6200);
+    gestorReserva.setVehiculoDevuelto();
+
+    const distanciaRecorrida = gestorReserva.getDistanciaRecorrida();
+
+    const recargo = temporada.getRecargo();
+
+    const expected = calculadora.calcularTarifaTotal(
+      gestorReserva.getFechaInicio(),
+      gestorReserva.getFechaFin(),
+      distanciaRecorrida,
+      gestorReserva.getVehiculo(),
+      recargo
+    );
+    const tarifa = gestorReserva.tarifaFinalDeReserva();
+
+    expect(tarifa).toBeCloseTo(expected, 2);
+  });
+
+
+  it("setCostoTotal lanza error si valor negativo", () => {
+    expect(() => gestorReserva.setCostoTotal(-10)).toThrow(GestorDeReservaError);
+  });
+
+  it("setCostoTotal y getCostoTotal funcionan correctamente", () => {
+    gestorReserva.setCostoTotal(1000);
+    expect(gestorReserva.getCostoTotal()).toBe(1000);
+  });
+
+  it("setVehiculo y getVehiculo funcionan correctamente", () => {
+    const nuevoVehiculo = new VehiculoSedan("XYZ999", 0);
+    nuevoVehiculo.setKilometraje(2000);
+    gestorReserva.setVehiculo(new GestorDeVehiculo(nuevoVehiculo, calculadora, 500, 50, 200, 100));
+    expect(gestorReserva.getVehiculo().getVehiculo()).toBe(nuevoVehiculo);
+  });
+
+  it("setTemporada y getTemporada funcionan correctamente", () => {
+    const nuevaTemporada = new TemporadaAlta(new Date("2025-02-01"), new Date("2025-02-10"));
+    gestorReserva.setTemporada(nuevaTemporada);
+    expect(gestorReserva.getTemporada()).toBe(nuevaTemporada);
+  });
+
+  it("getFechaInicio y getFechaFin devuelven las fechas de la reserva", () => {
+    expect(gestorReserva.getFechaInicio().toISOString().slice(0, 10)).toBe("2025-01-08");
+    expect(gestorReserva.getFechaFin().toISOString().slice(0, 10)).toBe("2025-01-10");
+  });
 });

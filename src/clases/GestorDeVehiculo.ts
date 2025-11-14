@@ -1,17 +1,15 @@
 import GestorDeVehiculoError from "../clasesDeError/GestorDeVehiculoError";
-import GestorDeReserva from "./GestorDeReserva";
 import Vehiculo from "./Vehiculos/Vehiculo";
-import GestorDeEstado from "./GestorDeEstado";
 import CalculadoraDeTarifa from "./Calculadoras/CalculadoraDeTarifa";
-import EstadoVehiculo from "../interfaz/EstadoVehiculo";
 import EstadoDisponible from "./Estados/EstadoDisponible";
 import Cliente from "./Personas/Cliente";
+import Estados from "./Estados/Estados";
 
 export default class GestorDeVehiculo {
     private vehiculo!: Vehiculo;
-    private estado!: EstadoVehiculo;
-    private ultimoKmMantenimiento!: number;
-    private fechaUltimoMantenimiento!: Date;
+    private estado!: Estados;
+    private ultimoKmMantenimiento: number = 0;
+    private fechaUltimoMantenimiento: Date = new Date();
     private contador: number;
     private calculadora!: CalculadoraDeTarifa;
     private tarifaBase!: number;
@@ -36,30 +34,39 @@ export default class GestorDeVehiculo {
 
     public enviarReservar(cliente: Cliente, fechaInicio: Date, fechaFin: Date): void {
         this.estado.enviarReservar(this, cliente, fechaInicio, fechaFin);
+        this.contadorAcumulado();
     }
 
-    public dispararMantenimiento(costo: number, distanciaRecorrida: number, fechaInicio: Date, fechaFin: Date): void {
+    public dispararMantenimiento(costo: number, distanciaRecorrida: number, fecha: Date): void {
         const ultimoMantenimientoKm = this.getKilometrajeActual() - this.getUltimoKmMantenimiento();
         const fechaActual = new Date();
         const meses = (fechaActual.getFullYear() - this.getFechaUltimoMantenimiento().getFullYear()) * 12
-                    + (fechaActual.getMonth() - this.getFechaUltimoMantenimiento().getMonth());
+            + (fechaActual.getMonth() - this.getFechaUltimoMantenimiento().getMonth());
         const alquileres = this.getContadorAcumulado() % 5;
-        
+
         if (ultimoMantenimientoKm > 10000 || meses > 12 || alquileres === 0) {
-            this.estado.enviarMantenimiento(this, costo, fechaInicio, fechaFin);
+            this.estado.enviarMantenimiento(this, costo, fecha);
+            this.setFechaUltimoMantenimiento(this.estado.getFecha());
+            this.setUltimoKmMantenimiento(this.getKilometrajeActual())
         }
         else {
-            this.estado.enviarNecesitaLimpieza(this, distanciaRecorrida, fechaInicio, fechaFin);
+            this.estado.enviarNecesitaLimpieza(this, distanciaRecorrida, fecha);
         }
     }
-    
 
-    public setUltimoKmMantenimiento(data: GestorDeReserva): void {
-        const kmMantenimiento = data.getKmFinal();
-        if (!Number.isInteger(kmMantenimiento) || kmMantenimiento <= 0) {
+    public setEstado(data: Estados) {
+        if (!data) throw new GestorDeVehiculoError("El estado no puede ser null");
+        this.estado = data;
+    }
+    public getEstado(): Estados {
+        return this.estado;
+    }
+
+    public setUltimoKmMantenimiento(data: number): void {
+        if (!Number.isInteger(data) || data <= 0) {
             throw new GestorDeVehiculoError("El valor del kilometraje obtenido es incorrecto");
         }
-        this.ultimoKmMantenimiento = kmMantenimiento;
+        this.ultimoKmMantenimiento = data;
     }
 
     public getUltimoKmMantenimiento(): number {
@@ -67,11 +74,10 @@ export default class GestorDeVehiculo {
     }
 
     public setFechaUltimoMantenimiento(fecha: Date): void {
-        const fechaUltimoMantenimiento = this.estado.getFechaFin();
-        if (Number.isNaN(fechaUltimoMantenimiento.getTime())) {
+        if (Number.isNaN(fecha.getTime())) {
             throw new GestorDeVehiculoError("La fecha proporcionada no es válida");
         }
-        this.fechaUltimoMantenimiento = fechaUltimoMantenimiento;
+        this.fechaUltimoMantenimiento = fecha;
     }
 
     public getFechaUltimoMantenimiento(): Date {
@@ -93,11 +99,8 @@ export default class GestorDeVehiculo {
         this.tarifaBase = data;
     }
 
-    public setAdicionalPorKm(data: number) {
-        if (!Number.isFinite(data) || data < 0) {
-            throw new GestorDeVehiculoError("El adicional por km debe ser un número mayor o igual a 0");
-        }
-        this.adicionalPorKm = data;
+    public getTarifaBase(): number {
+        return this.tarifaBase;
     }
 
     public setLimiteDiarioKm(data: number) {
@@ -107,6 +110,10 @@ export default class GestorDeVehiculo {
         this.limiteDiarioKm = data;
     }
 
+    public getLimiteDiarioKm(): number {
+        return this.limiteDiarioKm;
+    }
+
     public setSeguro(data: number) {
         if (!Number.isFinite(data) || data < 0) {
             throw new GestorDeVehiculoError("El seguro debe ser un número mayor o igual a 0");
@@ -114,9 +121,16 @@ export default class GestorDeVehiculo {
         this.seguro = data;
     }
 
+    public getSeguro(): number {
+        return this.seguro;
+    }
+
     public setVehiculo(data: Vehiculo) {
         if (!data) throw new GestorDeVehiculoError("El vehículo no puede ser null");
         this.vehiculo = data;
+    }
+    public getVehiculo(): Vehiculo {
+        return this.vehiculo;
     }
 
     public setCalculadora(data: CalculadoraDeTarifa) {
@@ -124,36 +138,22 @@ export default class GestorDeVehiculo {
         this.calculadora = data;
     }
 
-    public setEstado(data: EstadoVehiculo) {
-        if (!data) throw new GestorDeVehiculoError("El estado no puede ser null");
-        this.estado = data;
+    public getCalculadora(): CalculadoraDeTarifa {
+        return this.calculadora;
     }
 
-    public getTarifaBase(): number { 
-        return this.tarifaBase; 
+    public setAdicionalPorKm(data: number) {
+        if (!Number.isFinite(data) || data < 0) {
+            throw new GestorDeVehiculoError("El adicional por km debe ser un número mayor o igual a 0");
+        }
+        this.adicionalPorKm = data;
     }
 
-    public getAdicionalPorKm(): number { 
-        return this.adicionalPorKm; 
-    }
-
-    public getLimiteDiarioKm(): number { 
-        return this.limiteDiarioKm; 
-    }
-
-    public getSeguro(): number { 
-        return this.seguro; 
-    }
-
-    public getVehiculo(): Vehiculo { 
-        return this.vehiculo; 
-    }
-
-    public getCalculadora(): CalculadoraDeTarifa { 
-        return this.calculadora; 
+    public getAdicionalPorKm(): number {
+        return this.adicionalPorKm;
     }
 
     public getKilometrajeActual(): number {
-         return this.vehiculo.getKilometraje(); 
+        return this.vehiculo.getKilometraje();
     }
 }

@@ -7,14 +7,14 @@ export default abstract class Persona {
     protected dni!: number;
 
     constructor(nombre: string, apellido: string, dni: number) {
-            this.setNombre(nombre);
-            this.setApellido(apellido);
-            this.setDni(dni);
+        this.setNombre(nombre);
+        this.setApellido(apellido);
+        this.setDni(dni);
     }
 
-    public setNombre(data: string) {
-        if (!data) {
-            throw new PersonaError("El nombre no puede estar vacio")
+    public setNombre(data: string): void {
+        if (!data || data.trim() === "") {
+            throw new PersonaError("El nombre no puede estar vacio");
         }
         this.nombre = data;
     }
@@ -23,9 +23,9 @@ export default abstract class Persona {
         return this.nombre;
     }
 
-    public setApellido(data: string) {
-        if (!data) {
-            throw new PersonaError("El apellido no puede estar vacio")
+    public setApellido(data: string): void {
+        if (!data || data.trim() === "") {
+            throw new PersonaError("El apellido no puede estar vacio");
         }
         this.apellido = data;
     }
@@ -34,9 +34,9 @@ export default abstract class Persona {
         return this.apellido;
     }
 
-    public setDni(data: number) {
+    public setDni(data: number): void {
         if (!Number.isInteger(data) || data <= 0) {
-            throw new PersonaError("El DNI no puede estar vacio y debe ser un numero positivo")
+            throw new PersonaError("El DNI no puede estar vacio y debe ser un numero positivo");
         }
         this.dni = data;
     }
@@ -44,5 +44,4 @@ export default abstract class Persona {
     public getDni(): number {
         return this.dni;
     }
-
 }
