@@ -1,111 +1,106 @@
 import GestorDeVehiculo from "../src/clases/GestorDeVehiculo";
+import EstadoDisponible from "../src/clases/Estados/EstadoDisponible";
+import EstadoReservado from "../src/clases/Estados/EstadoReservado";
+import Cliente from "../src/clases/Personas/Cliente";
+import CalculadoraSedan from "../src/clases/Calculadoras/CalculadoraSedan";
 import GestorDeVehiculoError from "../src/clasesDeError/GestorDeVehiculoError";
-import GestorDeReserva from "../src/clases/GestorDeReserva";
-import CalculadoraDeTarifa from "../src/clases/CalculadoraDeTarifa";
-import Vehiculo from "../src/clases/Vehiculo";
-import GestorDeEstado from "../src/clases/GestorDeEstado";
+import VehiculoSedan from "../src/clases/Vehiculos/VehiculoSedan";
 
-class VehiculoMock extends Vehiculo {
-    constructor(patente: string, kilometraje: number) {
-        super(patente, kilometraje);
-    }
+describe("GestorDeVehiculo - Tests completos", () => {
+  let vehiculo: VehiculoSedan;
+  let calculadora: CalculadoraSedan;
+  let gestor: GestorDeVehiculo;
+  let cliente: Cliente;
 
-    setKilometraje(km: number) {
-        super.setKilometraje(km);
-    }
+  beforeEach(() => {
+    vehiculo = new VehiculoSedan("ABC123", 0);
+    vehiculo.setKilometraje(1000);
+    calculadora = new CalculadoraSedan();
+    gestor = new GestorDeVehiculo(vehiculo, calculadora, 500, 50, 200, 100);
+    cliente = new Cliente("Maria", "Elena", 1234567);
+  });
 
-    getKilometraje(): number {
-        return super.getKilometraje();
-    }
-}
+  it("inicializa correctamente los campos", () => {
+    expect(gestor.getEstado()).toBeInstanceOf(EstadoDisponible);
+    expect(gestor.getVehiculo()).toBe(vehiculo);
+    expect(gestor.getCalculadora()).toBe(calculadora);
+    expect(gestor.getTarifaBase()).toBe(500);
+    expect(gestor.getAdicionalPorKm()).toBe(50);
+    expect(gestor.getLimiteDiarioKm()).toBe(200);
+    expect(gestor.getSeguro()).toBe(100);
+    expect(gestor.getContadorAcumulado()).toBe(0);
+  });
 
-class MantenimientoMock {
-    actualizarFechaMantenimiento(fecha: Date): Date {
-        return fecha;
-    }
-}
+  it("setters y validaciones lanzan errores cuando corresponden", () => {
+    expect(() => gestor.setEstado(null as any)).toThrow(GestorDeVehiculoError);
+    expect(() => gestor.setVehiculo(null as any)).toThrow(GestorDeVehiculoError);
+    expect(() => gestor.setCalculadora(null as any)).toThrow(GestorDeVehiculoError);
+    expect(() => gestor.setTarifaBase(-1)).toThrow(GestorDeVehiculoError);
+    expect(() => gestor.setAdicionalPorKm(-1)).toThrow(GestorDeVehiculoError);
+    expect(() => gestor.setLimiteDiarioKm(-1)).toThrow(GestorDeVehiculoError);
+    expect(() => gestor.setSeguro(-1)).toThrow(GestorDeVehiculoError);
+    expect(() => gestor.setUltimoKmMantenimiento(0)).toThrow(GestorDeVehiculoError);
+    expect(() => gestor.setFechaUltimoMantenimiento(new Date("invalid"))).toThrow(GestorDeVehiculoError);
+  });
 
-class EstadoMock extends GestorDeEstado {
-    constructor() {
-        super(new MantenimientoMock() as any);
-    }
+  it("getKilometrajeActual devuelve valor realista", () => {
+    expect(gestor.getKilometrajeActual()).toBe(1000);
+    vehiculo.setKilometraje(1200);
+    expect(gestor.getKilometrajeActual()).toBe(1200);
+  });
 
-    actualizarFechaMantenimiento(fecha: Date): Date {
-        return fecha;
-    }
-}
+  it("contadorAcumulado incrementa correctamente", () => {
+    gestor.contadorAcumulado();
+    gestor.contadorAcumulado();
+    expect(gestor.getContadorAcumulado()).toBe(2);
+  });
 
-class CalculadoraMock extends CalculadoraDeTarifa {
-    calcularTarifaTotal = jest.fn().mockReturnValue(500);
-}
+  it("enviarReservar llama al estado y aumenta contador", () => {
+    const fechaInicio = new Date("2025-11-10");
+    const fechaFin = new Date("2025-11-15");
+    const enviarReservarSpy = jest.spyOn(gestor.getEstado(), "enviarReservar");
 
-describe("GestorDeVehiculo", () => {
-    let vehiculo: VehiculoMock;
-    let calculadora: CalculadoraMock;
-    let gestor: GestorDeVehiculo;
-    let estado: EstadoMock;
+    gestor.enviarReservar(cliente, fechaInicio, fechaFin);
 
-    beforeEach(() => {
-        vehiculo = new VehiculoMock("ABC123", 1000);
-        calculadora = new CalculadoraMock();
-        gestor = new GestorDeVehiculo(
-            vehiculo,
-            calculadora,
-            100, 
-            10,  
-            500, 
-            200  
-        );
-        estado = new EstadoMock();
-        gestor.setEstado(estado);
-    });
+    expect(enviarReservarSpy).toHaveBeenCalledWith(gestor, cliente, fechaInicio, fechaFin);
+    expect(gestor.getContadorAcumulado()).toBe(1);
+  });
 
-    test("Debe instanciar correctamente el gestor de vehículo", () => {
-        expect(gestor.getVehiculo()).toBe(vehiculo);
-        expect(gestor.getCalculadora()).toBe(calculadora);
-        expect(gestor.getTarifaBase()).toBe(100);
-        expect(gestor.getAdicionalPorKm()).toBe(10);
-        expect(gestor.getLimiteDiarioKm()).toBe(500);
-        expect(gestor.getSeguro()).toBe(200);
-        expect(gestor.getKilometrajeActual()).toBe(1000);
-    });
+  it("dispararMantenimiento llama a enviarMantenimiento si km alto y estado Reservado", () => {
+    const fechaInicio = new Date("2025-01-01");
+    const fechaFin = new Date("2025-01-10");
+    const estadoReservado = new EstadoReservado(cliente, fechaInicio, fechaFin);
+    gestor.setEstado(estadoReservado);
 
-    test("Validación de setters: tarifaBase, adicionalPorKm, limiteDiarioKm y seguro", () => {
-        expect(() => gestor.setTarifaBase(-1)).toThrow(GestorDeVehiculoError);
-        expect(() => gestor.setAdicionalPorKm(-5)).toThrow(GestorDeVehiculoError);
-        expect(() => gestor.setLimiteDiarioKm(-10)).toThrow(GestorDeVehiculoError);
-        expect(() => gestor.setSeguro(-100)).toThrow(GestorDeVehiculoError);
-    });
+    const enviarMantenimientoSpy = jest.spyOn(estadoReservado, "enviarMantenimiento");
 
-    test("Validación de setVehiculo y setCalculadora", () => {
-        expect(() => gestor.setVehiculo(null as any)).toThrow(GestorDeVehiculoError);
-        expect(() => gestor.setCalculadora(null as any)).toThrow(GestorDeVehiculoError);
-    });
+    vehiculo.setKilometraje(15000);
+    gestor.setUltimoKmMantenimiento(1000);
+    gestor.setFechaUltimoMantenimiento(new Date("2024-01-01"));
+    for (let i = 0; i < 5; i++) gestor.contadorAcumulado();
 
-    test("setUltimoKmMantenimiento y getUltimoKmMantenimiento", () => {
-        const reservaMock = {
-            getKmFinal: () => 1200
-        } as GestorDeReserva;
+    const fecha = new Date();
+    gestor.dispararMantenimiento(500, 100, fecha);
 
-        gestor.setUltimoKmMantenimiento(reservaMock);
-        expect(gestor.getUltimoKmMantenimiento()).toBe(1200);
+    expect(enviarMantenimientoSpy).toHaveBeenCalled();
+  });
 
-        const reservaMal = {
-            getKmFinal: () => -5
-        } as GestorDeReserva;
-        expect(() => gestor.setUltimoKmMantenimiento(reservaMal)).toThrow(GestorDeVehiculoError);
-    });
+  it("dispararMantenimiento llama a enviarNecesitaLimpieza si no se cumplen condiciones de mantenimiento", () => {
+    const fechaInicio = new Date("2025-01-01");
+    const fechaFin = new Date("2025-01-10");
+    const estadoReservado = new EstadoReservado(cliente, fechaInicio, fechaFin);
+    gestor.setEstado(estadoReservado);
 
-    test("setFechaUltimoMantenimiento y getFechaUltimoMantenimiento", () => {
-        const fecha = new Date("2025-01-01");
-        gestor.setFechaUltimoMantenimiento(fecha);
-        expect(gestor.getFechaUltimoMantenimiento()).toEqual(fecha);
-    });
+    const enviarNecesitaLimpiezaSpy = jest.spyOn(estadoReservado, "enviarNecesitaLimpieza");
 
-    test("contadorAcumulado incrementa correctamente", () => {
-        expect(gestor.getContadorAcumulado()).toBe(0);
-        gestor.contadorAcumulado();
-        gestor.contadorAcumulado();
-        expect(gestor.getContadorAcumulado()).toBe(2);
-    });
+    vehiculo.setKilometraje(5000);
+    gestor.setUltimoKmMantenimiento(1000);
+    gestor.setFechaUltimoMantenimiento(new Date());
+    gestor.contadorAcumulado();
+
+    const fecha = new Date();
+    gestor.dispararMantenimiento(500, 100, fecha);
+
+    expect(enviarNecesitaLimpiezaSpy).toHaveBeenCalled();
+  });
 });

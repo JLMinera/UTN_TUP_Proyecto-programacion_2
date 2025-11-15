@@ -1,19 +1,20 @@
 import GestorDeReservaError from "../clasesDeError/GestorDeReservaError";
-import Reserva from "./Reserva";
-import Temporada from "./Temporada";
+import Temporada from "./Temporadas/Temporada";
 import GestorDeVehiculo from "./GestorDeVehiculo";
-import Cliente from "./Cliente";
+import Cliente from "./Personas/Cliente";
+import EstadoReservado from "./Estados/EstadoReservado";
 
 export default class GestorDeReserva {
+
     private kmInicial!: number;
     private kmFinal!: number;
     private vehiculo: GestorDeVehiculo;
     private vehiculoDevuelto: boolean = false;
-    private reserva: Reserva;
+    private reserva: EstadoReservado;
     private temporada: Temporada;
     private costoTotal: number = 0;
 
-    constructor(vehiculo: GestorDeVehiculo, reserva: Reserva, temporada: Temporada) {
+    constructor(vehiculo: GestorDeVehiculo, reserva: EstadoReservado, temporada: Temporada) {
         this.vehiculo = vehiculo;
         this.reserva = reserva;
         this.temporada = temporada;

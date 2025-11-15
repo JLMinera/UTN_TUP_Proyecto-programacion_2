@@ -1,4 +1,4 @@
-import CalculadoraDeTarifa from "../src/clases/CalculadoraDeTarifa";
+import CalculadoraDeTarifa from "../src/clases/Calculadoras/CalculadoraDeTarifa";
 import GestorDeVehiculo from "../src/clases/GestorDeVehiculo";
 import CalculadoraError from "../src/clasesDeError/CalculadoraError";
 
