@@ -1,0 +1,86 @@
+@startuml
+
+title Diagrama de Secuencia - Cálculo de Tarifa Final de Reserva
+
+actor Cliente
+participant "gestorReserva\n:GestorDeReserva" as GR
+participant "reserva\n:EstadoReservado" as ER
+participant "temporada\n:Temporada" as T
+participant "vehiculo\n:GestorDeVehiculo" as GV
+participant "calculadora\n:CalculadoraSedan" as CALC
+
+== Cálculo de Tarifa Final ==
+
+Cliente -> GR: tarifaFinalDeReserva()
+activate GR
+
+GR -> GR: verificar vehiculoDevuelto
+note right: if (!vehiculoDevuelto)\n  throw Error
+
+alt Vehículo NO devuelto
+    GR --> Cliente: GestorDeReservaError
+    note right: "No se puede calcular\nla tarifa antes de\ndevolver el vehículo"
+end
+
+GR -> ER: getFechaInicio()
+activate ER
+ER --> GR: fechaInicio
+deactivate ER
+
+GR -> ER: getFechaFin()
+activate ER
+ER --> GR: fechaFin
+deactivate ER
+
+GR -> GR: getDistanciaRecorrida()
+note right: return kmFinal - kmInicial
+
+GR -> T: getRecargo()
+activate T
+T --> GR: recargo
+deactivate T
+note right: Ej: 1.2 (temporada alta)\n1.0 (temporada baja)
+
+GR -> GV: getCalculadora()
+activate GV
+GV --> GR: calculadora
+deactivate GV
+
+GR -> GV: obtener referencia
+note right: Para pasar como\nparámetro a calcularTarifaTotal()
+
+GR -> CALC: calcularTarifaTotal(fechaInicio, fechaFin, distanciaRecorrida, vehiculo, recargo)
+activate CALC
+
+CALC -> CALC: diasTotales(fechaInicio, fechaFin)
+note right: Calcula diferencia en días\nentre fechaFin y fechaInicio\nSi dias == 0, retorna 1
+
+CALC -> GV: getTarifaBase()
+activate GV
+GV --> CALC: tarifaBase
+deactivate GV
+note right: Ej: $5000 por día
+
+CALC -> CALC: calcular base
+note right: dias × (recargo × tarifaBase)\nEj: 3 días × (1.2 × $5000)\n= 3 × $6000 = $18000
+
+CALC -> GV: getAdicionalPorKm()
+activate GV
+GV --> CALC: adicionalPorKm
+deactivate GV
+note right: Ej: $50 por km
+
+CALC -> CALC: calcular adicional por km
+note right: adicionalPorKm × kmTotales\nEj: $50 × 200 km = $10000
+
+CALC -> CALC: sumar tarifas
+note right: tarifaFinal = base + adicional\nEj: $18000 + $10000 = $28000
+
+CALC --> GR: tarifaTotal
+deactivate CALC
+
+GR --> Cliente: tarifaTotal
+deactivate GR
+note right: Retorna el costo\ntotal del alquiler
+
+@enduml
