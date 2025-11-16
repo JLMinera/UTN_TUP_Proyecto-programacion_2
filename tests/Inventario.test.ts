@@ -72,15 +72,22 @@ describe("Inventario - Tests con gestores y vehículos", () => {
   });
 
   it("porcentajeVehiculosAlquilados calcula correctamente con múltiples vehículos y fechas hardcodeadas", () => {
+    gestorReservaSedan.setVehiculoDevuelto();
     inventario.registrarAlquiler(gestorReservaSedan, gestorSedan);
+    
+    gestorReservaSuv.setVehiculoDevuelto();
     inventario.registrarAlquiler(gestorReservaSuv, gestorSuv);
+    
     const porcentaje = inventario.porcentajeVehiculosAlquilados(fechaInicio1, fechaFin2);
     expect(porcentaje).toBeCloseTo((2 / 3) * 100);
   });
 
   it("vehiculoMasAlquilado y vehiculoMenosAlquilado funcionan correctamente con múltiples operaciones", () => {
+    gestorReservaSedan.setVehiculoDevuelto();
     inventario.registrarAlquiler(gestorReservaSedan, gestorSedan);
+    
     inventario.registrarAlquiler(gestorReservaSedan, gestorSedan); // doble operación
+    gestorReservaSuv.setVehiculoDevuelto();
     inventario.registrarAlquiler(gestorReservaSuv, gestorSuv);
 
     expect(inventario.vehiculoMasAlquilado(fechaInicio1, fechaFin2)).toBe("AAA111");
@@ -88,13 +95,18 @@ describe("Inventario - Tests con gestores y vehículos", () => {
   });
 
   it("vehiculoMayorRentabilidad y vehiculoMenorRentabilidad calculan correctamente ingresos - egresos", () => {
+    gestorReservaSedan.setVehiculoDevuelto();
     inventario.registrarAlquiler(gestorReservaSedan, gestorSedan); // 500 tarifa base + adicionales según calculadora
+    
+    gestorReservaSuv.setVehiculoDevuelto();
     inventario.registrarAlquiler(gestorReservaSuv, gestorSuv);
+    
+
     inventario.registrarMantenimiento(gestorSedan, 200, 100, fechaMantenimiento);
     inventario.registrarMantenimiento(gestorSuv, 1000, 200, fechaMantenimiento);
 
-    expect(inventario.vehiculoMayorRentabilidad()).toBe("AAA111");
-    expect(inventario.vehiculoMenorRentabilidad()).toBe("BBB222");
+    expect(inventario.vehiculoMayorRentabilidad()).toBe("BBB222"); 
+    expect(inventario.vehiculoMenorRentabilidad()).toBe("AAA111");
   });
 
   it("maneja errores internos de enviarReservar sin fallar", () => {
