@@ -1,0 +1,70 @@
+@startuml
+
+title Diagrama de Secuencia - Cálculo Vehículo de Mayor Rentabilidad
+
+actor Cliente
+participant "inventario\n:Inventario" as INV
+participant "alquileres\n:Map<patente,RegistroOperacion[]>" as ALQ
+participant "mantenimientos\n:Map<patente,RegistroOperacion[]>" as MAN
+participant "operaciones\n:RegistroOperacion[]" as OPS
+participant "operacion\n:RegistroOperacion" as OP
+
+== Solicitud Vehículo de Mayor Rentabilidad ==
+
+Cliente -> INV: vehiculoMayorRentabilidad()
+activate INV
+
+INV -> ALQ: keys()
+activate ALQ
+ALQ --> INV: listaPatentes
+deactivate ALQ
+
+loop Por cada patente
+    INV -> INV: calcularRentabilidadPatente(patente)
+
+    == Obtener alquileres ==
+    INV -> ALQ: get(patente)
+    activate ALQ
+    ALQ --> INV: alquileres[]
+    deactivate ALQ
+
+    INV -> INV: sumar ingresos
+    activate INV
+
+    loop por cada operacion de alquiler
+        INV -> OPS: getCosto()
+        activate OPS
+        OPS --> INV: costoAlquiler
+        deactivate OPS
+    end
+
+    deactivate INV
+
+    == Obtener mantenimientos ==
+    INV -> MAN: get(patente)
+    activate MAN
+    MAN --> INV: mantenimientos[]
+    deactivate MAN
+
+    INV -> INV: sumar egresos
+    activate INV
+
+    loop por cada operacion de mantenimiento
+        INV -> OPS: getCosto()
+        activate OPS
+        OPS --> INV: costoMantenimiento
+        deactivate OPS
+    end
+
+    deactivate INV
+
+    INV -> INV: rentabilidad = ingresos - egresos
+    note right: Ej: 18000 - 5000 = 13000
+
+    INV -> INV: comparar con maxValor\nsi rentabilidad > maxValor → actualizar
+end
+
+INV --> Cliente: patenteMayorRentabilidad
+deactivate INV
+
+@enduml
