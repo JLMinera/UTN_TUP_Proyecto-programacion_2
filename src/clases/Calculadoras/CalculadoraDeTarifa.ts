@@ -1,10 +1,21 @@
 import GestorDeVehiculo from "../GestorDeVehiculo";
 import CalculadoraError from "../../clasesDeError/CalculadoraError";
 
+/**
+ * Clase base para calcular tarifas de alquiler.
+ * Cada tipo de vehículo implementa su propia lógica de cálculo.
+ */
 export default abstract class CalculadoraDeTarifa {
 
+    /**
+     * Calcula la tarifa total del alquiler según el tipo de vehículo.
+     * @param recargoTemporada - Factor de recargo (ej: 1.2 para temporada alta)
+     */
     public abstract calcularTarifaTotal(fechaInicio: Date, fechaFin: Date, kmTotales: number, vehiculo: GestorDeVehiculo, recargoTemporada: number): number;
 
+    /**
+     * Calcula días entre dos fechas. Si es el mismo día, retorna 1 (mínimo un día de alquiler).
+     */
     protected diasTotales(fechaInicio: Date, fechaFin: Date): number {
         if (isNaN(fechaInicio.getTime())) {
             throw new CalculadoraError("Fecha de inicio no válida");
@@ -23,6 +34,7 @@ export default abstract class CalculadoraDeTarifa {
         }
         return dias;
     }
+    
     public getDiasTotales(fechaInicio: Date, fechaFin: Date): number {
         return this.diasTotales(fechaInicio, fechaFin);
     }
