@@ -2,106 +2,321 @@
 
 ' Clases
 
-class GestorDeReserva {
-    - kilometrajeInicial: number
-    - kilometrajeFinal: number
-    - distanciaRecorrida: number
-    - cliente: Cliente
-    - vehiculo: Vehiculo
-
-    + getters()
-    + setters()
-    + tarifa(): number
+abstract class CalculadoraDeTarifa {
+    + {abstract} calcularTarifaTotal(fechaInicio: Date, fechaFin: Date, kmTotales: number, vehiculo: GestorDeVehiculo, recargoTemporada: number): number
+    # diasTotales(fechaInicio: Date, fechaFin: Date): number
+    + getDiasTotales(fechaInicio: Date, fechaFin: Date): number
 }
+
+CalculadoraDeTarifa ..> CalculadoraError : <<throws>>
+CalculadoraDeTarifa ..> GestorDeVehiculo : <<uses>>
+
+class CalculadoraCompacto {
+    + calcularTarifaTotal(fechaInicio: Date, fechaFin: Date, kmTotales: number, vehiculo: GestorDeVehiculo, recargoTemporada: number): number
+}
+
+CalculadoraCompacto --|> CalculadoraDeTarifa
+
+class CalculadoraSedan {
+    + calcularTarifaTotal(fechaInicio: Date, fechaFin: Date, kmTotales: number, vehiculo: GestorDeVehiculo, recargoTemporada: number): number
+}
+
+CalculadoraSedan --|> CalculadoraDeTarifa
+
+class CalculadoraSuv {
+    + calcularTarifaTotal(fechaInicio: Date, fechaFin: Date, kmTotales: number, vehiculo: GestorDeVehiculo, recargoTemporada: number): number
+}
+
+CalculadoraSuv --|> CalculadoraDeTarifa
+
+abstract class Estados {
+    # fecha: Date
+
+    + {abstract} enviarDisponible(vehiculo: GestorDeVehiculo): void
+    + {abstract} enviarReservar(gestorVehiculo: GestorDeVehiculo, cliente: Cliente, fechaInicio: Date, fechaFin: Date): void
+    + {abstract} enviarMantenimiento(gestorVehiculo: GestorDeVehiculo, costo: number, fecha: Date): void
+    + {abstract} enviarNecesitaLimpieza(gestorVehiculo: GestorDeVehiculo, distanciaRecorrida: number, fecha: Date): void
+    + setFecha(data: Date): void
+    + getFecha(): Date
+}
+
+Estados ..> EstadoError : <<throws>>
+Estados ..> GestorDeVehiculo : <<uses>>
+Estados ..> Cliente : <<uses>>
+
+class EstadoReservado {
+    - cliente: Cliente
+    - fechaInicio: Date
+    - fechaFin: Date
+
+    + EstadoReservado(cliente: Cliente, fechaInicio: Date, fechaFin: Date)
+    + enviarDisponible(gestorVehiculo: GestorDeVehiculo): void
+    + enviarReservar(gestorVehiculo: GestorDeVehiculo, cliente: Cliente, fechaInicio: Date, fechaFin: Date): void
+    + enviarMantenimiento(gestorVehiculo: GestorDeVehiculo, costo: number, fecha: Date): void
+    + enviarNecesitaLimpieza(gestorVehiculo: GestorDeVehiculo, distanciaRecorrida: number, fecha: Date): void
+    + getCliente(): Cliente
+    + setCliente(cliente: Cliente): void
+    + setFechaInicio(data: Date): void
+    + getFechaInicio(): Date
+    + setFechaFin(data: Date): void
+    + getFechaFin(): Date
+}
+
+EstadoReservado --|> Estados
+EstadoReservado ..> EstadoMantenimiento : <<creates>>
+EstadoReservado ..> EstadoNecesitaLimpieza : <<creates>>
+
+class EstadoNecesitaLimpieza {
+    - distanciaRecorrida: number
+    - fechaInicio: Date
+    - fechaFin: Date
+
+    + EstadoNecesitaLimpieza(distanciaRecorrida: number, fecha: Date)
+    + enviarDisponible(gestorVehiculo: GestorDeVehiculo): void
+    + enviarReservar(gestorVehiculo: GestorDeVehiculo, cliente: Cliente, fechaInicio: Date, fechaFin: Date): void
+    + enviarMantenimiento(gestorVehiculo: GestorDeVehiculo, costo: number, fecha: Date): void
+    + enviarNecesitaLimpieza(gestorVehiculo: GestorDeVehiculo, distanciaRecorrida: number, fecha: Date): void
+    + getDistanciaRecorrida(): number
+    + setDistanciaRecorrida(value: number): void
+    + setFecha(data: Date): void
+    + getFechaInicio(): Date
+}
+
+EstadoNecesitaLimpieza --|> Estados
+EstadoNecesitaLimpieza ..> EstadoDisponible : <<creates>>
+
+class EstadoMantenimiento {
+    - costo: number
+
+    + EstadoMantenimiento(costo: number, fecha: Date)
+    + enviarDisponible(gestorVehiculo: GestorDeVehiculo): void
+    + enviarReservar(gestorVehiculo: GestorDeVehiculo, cliente: Cliente, fechaInicio: Date, fechaFin: Date): void
+    + enviarMantenimiento(gestorVehiculo: GestorDeVehiculo, costo: number, fecha: Date): void
+    + enviarNecesitaLimpieza(gestorVehiculo: GestorDeVehiculo, distanciaRecorrida: number, fecha: Date): void
+    + setCosto(value: number): void
+    + getCosto(): number
+}
+
+EstadoMantenimiento --|> Estados
+EstadoMantenimiento ..> EstadoDisponible : <<creates>>
+
+class EstadoDisponible {
+    + enviarDisponible(gestorVehiculo: GestorDeVehiculo): void
+    + enviarReservar(gestorVehiculo: GestorDeVehiculo, cliente: Cliente, fechaInicio: Date, fechaFin: Date): void
+    + enviarMantenimiento(gestorVehiculo: GestorDeVehiculo, costo: number, fecha: Date): void
+    + enviarNecesitaLimpieza(gestorVehiculo: GestorDeVehiculo, distanciaRecorrida: number, fecha: Date): void
+}
+
+EstadoDisponible --|> Estados
 
 abstract class Persona {
-    - nombre: string
-    - apellido: string
-    - dni: number
+    # nombre: string
+    # apellido: string
+    # dni: number
 
-    + getters()
-    + setters()
+    + Persona(nombre: string, apellido: string, dni: number)
+    + setNombre(data: string): void
+    + getNombre(): string
+    + setApellido(data: string): void
+    + getApellido(): string
+    + setDni(data: number): void
+    + getDni(): number
 }
+
+Persona ..> PersonaError : <<throws>>
 
 class Cliente {
-
+    + Cliente(nombre: string, apellido: string, dni: number)
 }
 
+Cliente --|> Persona
+
+abstract class Temporada {
+    # fechaInicio: Date
+    # fechaFin: Date
+    # recargo: number
+
+    + Temporada(fechaInicio: Date, fechaFin: Date, recargo: number)
+    + setFechaInicio(data: Date): void
+    + setFechaFin(data: Date): void
+    + setRecargo(data: number): void
+    + getFechaInicio(): Date
+    + getFechaFin(): Date
+    + getRecargo(): number
+    + reservaEnTemporada(fechaReserva: Date): boolean
+}
+
+Temporada ..> TemporadaError : <<throws>>
+
+class TemporadaAlta {
+    + TemporadaAlta(fechaInicio: Date, fechaFin: Date)
+}
+
+TemporadaAlta --|> Temporada
+
+class TemporadaBaja {
+    + TemporadaBaja(fechaInicio: Date, fechaFin: Date)
+}
+
+TemporadaBaja --|> Temporada
+
+class TemporadaMedia {
+    + TemporadaMedia(fechaInicio: Date, fechaFin: Date)
+}
+
+TemporadaMedia --|> Temporada
+
+class VehiculoError {
+}
 
 abstract class Vehiculo {
     # patente: string
     # kilometraje: number
-    # tarifaBase: number
 
-    + getters()
-    + setters()
-
+    + Vehiculo(patente: string, kilometraje: number)
+    + setPatente(data: string): void
+    + getPatente(): string
+    + setKilometraje(data: number): void
+    + getKilometraje(): number
 }
 
-class Sedan {
+Vehiculo ..> VehiculoError : <<throws>>
 
+class VehiculoCompacto {
+    + VehiculoCompacto(patente: string, kilometraje: number)
 }
 
-class Compacto {
+VehiculoCompacto --|> Vehiculo
 
+class VehiculoSedan {
+    + VehiculoSedan(patente: string, kilometraje: number)
 }
 
-class SUV {
+VehiculoSedan --|> Vehiculo
 
+class VehiculoSuv {
+    + VehiculoSuv(patente: string, kilometraje: number)
 }
 
-interface Tarifa {
-    + calculoTarifa(): number
+VehiculoSuv --|> Vehiculo
+
+class GestorDeReserva {
+    - kmInicial: number
+    - kmFinal: number
+    - vehiculo: GestorDeVehiculo
+    - vehiculoDevuelto: boolean
+    - reserva: EstadoReservado
+    - temporada: Temporada
+    - costoTotal: number
+
+    + GestorDeReserva(vehiculo: GestorDeVehiculo, reserva: EstadoReservado, temporada: Temporada)
+    + setKmInicial(data: number): void
+    + getKmInicial(): number
+    + setKmFinal(data: number): void
+    + getKmFinal(): number
+    + getDistanciaRecorrida(): number
+    + getCliente(): Cliente
+    + getVehiculo(): GestorDeVehiculo
+    + setVehiculo(data: GestorDeVehiculo): void
+    + getVehiculoDevuelto(): boolean
+    + getFechaInicio(): Date
+    + getFechaFin(): Date
+    + setTemporada(data: Temporada): void
+    + getTemporada(): Temporada
+    + setCostoTotal(data: number): void
+    + getCostoTotal(): number
+    + setVehiculoDevuelto(): void
+    + tarifaFinalDeReserva(): number
 }
 
-abstract class Estado {
-    - fechaInicio: date
-    - fechaFin: date
-    - vehiculo: map<matricula: string, Vehiculo>
+GestorDeReserva *-- GestorDeVehiculo
+GestorDeReserva *-- EstadoReservado
+GestorDeReserva *-- Temporada
+GestorDeReserva ..> GestorDeReservaError : <<throws>>
 
-    + getters()
-    + setters()
+class GestorDeVehiculo {
+    - vehiculo: Vehiculo
+    - estado: Estados
+    - ultimoKmMantenimiento: number
+    - fechaUltimoMantenimiento: Date
+    - contador: number
+    - calculadora: CalculadoraDeTarifa
+    - tarifaBase: number
+    - adicionalPorKm: number
+    - limiteDiarioKm: number
+    - seguro: number
+
+    + GestorDeVehiculo(vehiculo: Vehiculo, calculadora: CalculadoraDeTarifa, tarifaBase: number, adicionalPorKm: number, limiteDiarioKm: number, seguro: number)
+    + enviarDisponible(): void
+    + enviarReservar(cliente: Cliente, fechaInicio: Date, fechaFin: Date): void
+    + dispararMantenimiento(costo: number, distanciaRecorrida: number, fecha: Date): void
+    + setEstado(data: Estados): void
+    + getEstado(): Estados
+    + setUltimoKmMantenimiento(data: number): void
+    + getUltimoKmMantenimiento(): number
+    + setFechaUltimoMantenimiento(fecha: Date): void
+    + getFechaUltimoMantenimiento(): Date
+    + contadorAcumulado(): void
+    + getContadorAcumulado(): number
+    + setTarifaBase(data: number): void
+    + getTarifaBase(): number
+    + setLimiteDiarioKm(data: number): void
+    + getLimiteDiarioKm(): number
+    + setSeguro(data: number): void
+    + getSeguro(): number
+    + setVehiculo(data: Vehiculo): void
+    + getVehiculo(): Vehiculo
+    + setCalculadora(data: CalculadoraDeTarifa): void
+    + getCalculadora(): CalculadoraDeTarifa
+    + setAdicionalPorKm(data: number): void
+    + getAdicionalPorKm(): number
+    + getKilometrajeActual(): number
 }
 
-class Reserva {
-    
+GestorDeVehiculo *-- Vehiculo
+GestorDeVehiculo *-- Estados
+GestorDeVehiculo *-- CalculadoraDeTarifa
+GestorDeVehiculo ..> GestorDeVehiculoError : <<throws>>
+GestorDeVehiculo ..> Cliente : <<uses>>
+GestorDeVehiculo ..> EstadoDisponible : <<creates>>
+
+class Error {
 }
 
-class NecesitaLimpieza {
-    
+class VehiculoError {
+    + VehiculoError(mensaje: string)
 }
 
-class Mantenimiento {
-    - costo: number
-    
+class CalculadoraError {
+    + CalculadoraError(mensaje: string)
 }
 
-class Disponible {
-    
+class EstadoError {
+    + EstadoError(mensaje: string)
 }
 
-' Relaciones
+class PersonaError {
+    + PersonaError(mensaje: string)
+}
 
-Persona <|-d- Cliente
+class TemporadaError {
+    + TemporadaError(mensaje: string)
+}
 
-Tarifa <|.u. Sedan
-Tarifa <|.u. Compacto
-Tarifa <|.u. SUV
+class GestorDeReservaError {
+    + GestorDeReservaError(mensaje: string)
+}
 
-Vehiculo <|-d- Sedan
-Vehiculo <|-d- Compacto
-Vehiculo <|-d- SUV
+class GestorDeVehiculoError {
+    + GestorDeVehiculoError(mensaje: string)
+}
 
-GestorDeReserva *-l- Vehiculo
-GestorDeReserva *-r- Cliente
-
-Estado *-r- Vehiculo
-
-Estado <|-d- Reserva
-Estado <|-d- NecesitaLimpieza
-Estado <|-d- Mantenimiento
-Estado <|-d- Disponible
-
-
+VehiculoError --|> Error
+CalculadoraError --|> Error
+EstadoError --|> Error
+PersonaError --|> Error
+TemporadaError --|> Error
+GestorDeReservaError --|> Error
+GestorDeVehiculoError --|> Error
 
 @enduml
