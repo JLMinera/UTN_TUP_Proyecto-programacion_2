@@ -1,4 +1,6 @@
-@startuml DriveHub
+@startuml
+
+title Diagrama de Clases - DriveHub
 
 ' Clases
 
@@ -280,6 +282,38 @@ GestorDeVehiculo ..> GestorDeVehiculoError : <<throws>>
 GestorDeVehiculo ..> Cliente : <<uses>>
 GestorDeVehiculo ..> EstadoDisponible : <<creates>>
 
+class RegistroOperacion {
+  - fecha: Date
+  - costo: number
+  
+  + RegistroOperacion(fecha: Date, costo: number)
+  + setFecha(data: Date): void
+  + getFecha(): Date
+  + setCosto(data: number): void
+  + getCosto(): number
+}
+
+class Inventario {
+  - totalVehiculos: number
+  - vehiculosEnAlquiler: Map<string, RegistroOperacion[]>
+  - vehiculosEnMantenimiento: Map<string, RegistroOperacion[]>
+  
+  + Inventario(totalVehiculos: number)
+  + registrarAlquiler(reserva: GestorDeReserva, vehiculo: GestorDeVehiculo): void
+  + registrarMantenimiento(vehiculo: GestorDeVehiculo, costo: number, distanciaRecorrida: number, fecha: Date): void
+  + porcentajeVehiculosAlquilados(fechaInicio: Date, fechaFin: Date): number
+  + vehiculoMenosAlquilado(fechaInicio: Date, fechaFin: Date): string
+  + vehiculoMasAlquilado(fechaInicio: Date, fechaFin: Date): string
+  + vehiculoMayorRentabilidad(): string
+  + vehiculoMenorRentabilidad(): string
+  - calcularRentabilidadPatente(patente: string): number
+}
+
+Inventario o-- RegistroOperacion : "almacena"
+Inventario ..> GestorDeReserva : <<uses>>
+Inventario ..> GestorDeVehiculo : <<uses>>
+Inventario ..> InventarioError : <<throws>>
+
 class Error {
 }
 
@@ -311,6 +345,10 @@ class GestorDeVehiculoError {
     + GestorDeVehiculoError(mensaje: string)
 }
 
+class InventarioError {
+  + InventarioError(mensaje: string)
+}
+
 VehiculoError --|> Error
 CalculadoraError --|> Error
 EstadoError --|> Error
@@ -318,5 +356,6 @@ PersonaError --|> Error
 TemporadaError --|> Error
 GestorDeReservaError --|> Error
 GestorDeVehiculoError --|> Error
+InventarioError --|> Error
 
 @enduml
