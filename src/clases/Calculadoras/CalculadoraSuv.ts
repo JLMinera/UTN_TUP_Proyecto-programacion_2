@@ -1,8 +1,15 @@
 import CalculadoraDeTarifa from "./CalculadoraDeTarifa";
 import GestorDeVehiculo from "../GestorDeVehiculo";
 
+/**
+ * Calculadora para vehículos SUV.
+ * Aplica seguro diario y cobra adicional por km solo si excede el límite total (no diario).
+ */
 export default class CalculadoraSuv extends CalculadoraDeTarifa {
 
+    /**
+     * Fórmula: (días × recargo × tarifaBase) + (seguro × días) + adicional si excede límite.
+     */
     public calcularTarifaTotal(fechaInicio: Date, fechaFin: Date, kmTotales: number, vehiculo: GestorDeVehiculo, recargoTemporada: number): number {
         let dias: number = this.diasTotales(fechaInicio, fechaFin);
         let tarifaFinal: number;

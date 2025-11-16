@@ -2,6 +2,11 @@ import EstadoError from "../../clasesDeError/EstadoError";
 import GestorDeVehiculo from "../GestorDeVehiculo";
 import Cliente from "../Personas/Cliente";
 
+/**
+ * Patrón State: clase base para los diferentes estados de un vehículo.
+ * Estados posibles: Disponible, Reservado, Mantenimiento, NecesitaLimpieza.
+ * Cada estado define qué transiciones son válidas.
+ */
 export default abstract class Estados {
     
     protected fecha!: Date;
