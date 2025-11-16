@@ -1,5 +1,5 @@
-import GestorDeReserva from "../src/clases/GestorDeReserva";
-import GestorDeVehiculo from "../src/clases/GestorDeVehiculo";
+import GestorDeReserva from "../src/clases/Gestores/GestorDeReserva";
+import GestorDeVehiculo from "../src/clases/Gestores/GestorDeVehiculo";
 import EstadoReservado from "../src/clases/Estados/EstadoReservado";
 import Cliente from "../src/clases/Personas/Cliente";
 import Temporada from "../src/clases/Temporadas/Temporada";

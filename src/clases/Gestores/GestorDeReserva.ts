@@ -1,8 +1,9 @@
-import GestorDeReservaError from "../clasesDeError/GestorDeReservaError";
-import Temporada from "./Temporadas/Temporada";
-import GestorDeVehiculo from "./GestorDeVehiculo";
-import Cliente from "./Personas/Cliente";
-import EstadoReservado from "./Estados/EstadoReservado";
+
+import Temporada from "../Temporadas/Temporada";
+import GestorDeVehiculo from "../Gestores/GestorDeVehiculo";
+import Cliente from "../Personas/Cliente";
+import EstadoReservado from "../Estados/EstadoReservado";
+import GestorDeReservaError from "../../clasesDeError/GestorDeReservaError";
 
 /**
  * Clase encargada de gestionar una reserva de un vehículo.

@@ -1,4 +1,4 @@
-import GestorDeVehiculo from "../GestorDeVehiculo";
+import GestorDeVehiculo from "../Gestores/GestorDeVehiculo";
 import CalculadoraError from "../../clasesDeError/CalculadoraError";
 
 /**

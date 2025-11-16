@@ -2,7 +2,7 @@ import EstadoError from "../src/clasesDeError/EstadoError";
 import EstadoReservado from "../src/clases/Estados/EstadoReservado";
 import EstadoMantenimiento from "../src/clases/Estados/EstadoMantenimiento";
 import EstadoNecesitaLimpieza from "../src/clases/Estados/EstadoNecesitaLimpieza";
-import GestorDeVehiculo from "../src/clases/GestorDeVehiculo";
+import GestorDeVehiculo from "../src/clases/Gestores/GestorDeVehiculo";
 import VehiculoSedan from "../src/clases/Vehiculos/VehiculoSedan";
 import CalculadoraSedan from "../src/clases/Calculadoras/CalculadoraSedan";
 import Cliente from "../src/clases/Personas/Cliente";

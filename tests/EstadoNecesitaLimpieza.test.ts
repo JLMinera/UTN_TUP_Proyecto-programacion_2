@@ -1,5 +1,5 @@
 import EstadoNecesitaLimpieza from "../src/clases/Estados/EstadoNecesitaLimpieza";
-import GestorDeVehiculo from "../src/clases/GestorDeVehiculo";
+import GestorDeVehiculo from "../src/clases/Gestores/GestorDeVehiculo";
 import Cliente from "../src/clases/Personas/Cliente";
 import CalculadoraSedan from "../src/clases/Calculadoras/CalculadoraSedan";
 import EstadoDisponible from "../src/clases/Estados/EstadoDisponible";

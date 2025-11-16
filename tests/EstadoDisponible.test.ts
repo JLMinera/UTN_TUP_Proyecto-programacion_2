@@ -4,7 +4,7 @@ import VehiculoSedan from "../src/clases/Vehiculos/VehiculoSedan";
 import CalculadoraSedan from "../src/clases/Calculadoras/CalculadoraSedan";
 import EstadoError from "../src/clasesDeError/EstadoError";
 import Cliente from "../src/clases/Personas/Cliente";
-import GestorDeVehiculo from "../src/clases/GestorDeVehiculo";
+import GestorDeVehiculo from "../src/clases/Gestores/GestorDeVehiculo";
 
 describe("EstadoDisponible", () => {
   let vehiculo: VehiculoSedan;

@@ -1,41 +1,22 @@
 import CalculadoraCompacto from "../src/clases/Calculadoras/CalculadoraCompacto";
 import CalculadoraError from "../src/clasesDeError/CalculadoraError";
-import GestorDeVehiculo from "../src/clases/GestorDeVehiculo";
-
-class GestorDeVehiculoDummy {
-    constructor(
-        private tarifaBase: number,
-        private limiteKm: number,
-        private adicionalKm: number
-    ) { }
-
-    getTarifaBase() {
-        return this.tarifaBase;
-    }
-
-    getLimiteDiarioKm() {
-        return this.limiteKm;
-    }
-
-    getAdicionalPorKm() {
-        return this.adicionalKm;
-    }
-}
+import GestorDeVehiculo from "../src/clases/Gestores/GestorDeVehiculo";
+import VehiculoCompacto from "../src/clases/Vehiculos/VehiculoCompacto";
 
 describe("CalculadoraCompacto", () => {
     let calculadora: CalculadoraCompacto;
-    let vehiculo: GestorDeVehiculo;
+    let gestorVehiculo: GestorDeVehiculo;
     let fechaInicio: Date;
     let fechaFin: Date;
+    let vehiculo: VehiculoCompacto;
 
     beforeEach(() => {
         calculadora = new CalculadoraCompacto();
-
-
-        vehiculo = new GestorDeVehiculoDummy(100, 200, 2) as unknown as GestorDeVehiculo;
-
+        vehiculo = new VehiculoCompacto("ABC123", 0);
+            vehiculo.setKilometraje(1000);
+        gestorVehiculo = new GestorDeVehiculo(vehiculo, calculadora, 100, 200, 2, 100);
         fechaInicio = new Date("2025-01-01");
-        fechaFin = new Date("2025-01-06")
+        fechaFin = new Date("2025-01-06");
     });
 
     test("Calcula la tarifa correctamente sin recargo por km", () => {
@@ -43,10 +24,10 @@ describe("CalculadoraCompacto", () => {
         const recargoTemporada = 0.1;
 
         const tarifa = calculadora.calcularTarifaTotal(
-            fechaInicio, fechaFin, kmTotales, vehiculo, recargoTemporada
+            fechaInicio, fechaFin, kmTotales, gestorVehiculo, recargoTemporada
         );
 
-        expect(tarifa).toBe(50);
+        expect(tarifa).toBe(180050);
     });
 
     test("Calcula la tarifa correctamente con recargo por km", () => {
@@ -54,10 +35,10 @@ describe("CalculadoraCompacto", () => {
         const recargoTemporada = 0.1;
 
         const tarifa = calculadora.calcularTarifaTotal(
-            fechaInicio, fechaFin, kmTotales, vehiculo, recargoTemporada
+            fechaInicio, fechaFin, kmTotales, gestorVehiculo, recargoTemporada
         );
 
-        expect(tarifa).toBe(2450);
+        expect(tarifa).toBe(240050);
     });
 
     test("No cobra extra cuando el km diario está justo en el límite", () => {
@@ -65,10 +46,10 @@ describe("CalculadoraCompacto", () => {
         const recargoTemporada = 0.2;
 
         const tarifa = calculadora.calcularTarifaTotal(
-            fechaInicio, fechaFin, kmTotales, vehiculo, recargoTemporada
+            fechaInicio, fechaFin, kmTotales, gestorVehiculo, recargoTemporada
         );
 
-        expect(tarifa).toBe(100);
+        expect(tarifa).toBe(200100);
     });
 
     test("Cobra un día completo cuando la diferencia de fechas es 0", () => {
@@ -76,7 +57,7 @@ describe("CalculadoraCompacto", () => {
         const recargoTemporada = 0.5;
 
         const tarifa = calculadora.calcularTarifaTotal(
-            fecha, fecha, 0, vehiculo, recargoTemporada
+            fecha, fecha, 0, gestorVehiculo, recargoTemporada
         );
 
         expect(tarifa).toBe(50);
@@ -88,7 +69,7 @@ describe("CalculadoraCompacto", () => {
 
         expect(() =>
             calculadora.calcularTarifaTotal(
-                fechaInicio, fechaFin, 100, vehiculo, 0.1
+                fechaInicio, fechaFin, 100, gestorVehiculo, 0.1
             )
         ).toThrow(CalculadoraError);
     });

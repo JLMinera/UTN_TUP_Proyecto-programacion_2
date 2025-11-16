@@ -1,10 +1,11 @@
-import GestorDeVehiculo from "../src/clases/GestorDeVehiculo";
+import GestorDeVehiculo from "../src/clases/Gestores/GestorDeVehiculo";
 import EstadoDisponible from "../src/clases/Estados/EstadoDisponible";
 import EstadoReservado from "../src/clases/Estados/EstadoReservado";
 import Cliente from "../src/clases/Personas/Cliente";
 import CalculadoraSedan from "../src/clases/Calculadoras/CalculadoraSedan";
 import GestorDeVehiculoError from "../src/clasesDeError/GestorDeVehiculoError";
 import VehiculoSedan from "../src/clases/Vehiculos/VehiculoSedan";
+import EstadoNecesitaLimpieza from "../src/clases/Estados/EstadoNecesitaLimpieza";
 
 describe("GestorDeVehiculo - Tests completos", () => {
   let vehiculo: VehiculoSedan;
@@ -103,4 +104,22 @@ describe("GestorDeVehiculo - Tests completos", () => {
 
     expect(enviarNecesitaLimpiezaSpy).toHaveBeenCalled();
   });
+  
+  it("setUltimoKmMantenimiento acepta valores válidos", () => {
+  gestor.setUltimoKmMantenimiento(500);
+  expect(gestor.getUltimoKmMantenimiento()).toBe(500);
+  });
+
+  it("Estado llama al método enviarDisponible del estado actual", () => {
+    const fecha: Date = new Date();
+    const estado = new EstadoNecesitaLimpieza(200, fecha);
+    gestor.setEstado(estado);
+
+    const spy = jest.spyOn(estado, "enviarDisponible");
+
+    gestor.enviarDisponible();
+
+    expect(spy).toHaveBeenCalledWith(gestor);
+  });
+
 });

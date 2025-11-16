@@ -1,9 +1,10 @@
-import GestorDeVehiculoError from "../clasesDeError/GestorDeVehiculoError";
-import Vehiculo from "./Vehiculos/Vehiculo";
-import CalculadoraDeTarifa from "./Calculadoras/CalculadoraDeTarifa";
-import EstadoDisponible from "./Estados/EstadoDisponible";
-import Cliente from "./Personas/Cliente";
-import Estados from "./Estados/Estados";
+
+import Vehiculo from "../Vehiculos/Vehiculo";
+import CalculadoraDeTarifa from "../Calculadoras/CalculadoraDeTarifa";
+import EstadoDisponible from "../Estados/EstadoDisponible";
+import Cliente from "../Personas/Cliente";
+import Estados from "../Estados/Estados";
+import GestorDeVehiculoError from "../../clasesDeError/GestorDeVehiculoError";
 
 /**
  * Gestor responsable del control del estado, mantenimiento y tarifas de un vehículo.

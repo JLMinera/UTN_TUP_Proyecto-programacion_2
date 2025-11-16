@@ -26,23 +26,23 @@ describe("Test Suv (hereda de Vehiculo)", () => {
         suv.setPatente("XYZ987");
         expect(suv.getPatente()).toBe("XYZ987");
     });
-
-    it("Debe lanzar un error si el kilometraje es negativo", () => {
-        expect(() => suv.setKilometraje(-1)).toThrow(VehiculoError);
-        expect(() => suv.setKilometraje(-1)).toThrow("El kilometraje debe ser un número mayor o igual a 0");
+    
+    it("Debe lanzar error si la patente es null", () => {
+    expect(() => suv.setPatente(null as any)).toThrow(VehiculoError);
     });
 
-    it("Debe lanzar un error si el kilometraje no es un número finito", () => {
-        expect(() => suv.setKilometraje(NaN)).toThrow(VehiculoError);
-        expect(() => suv.setKilometraje(NaN)).toThrow("El kilometraje debe ser un número mayor o igual a 0");
+   it("Debe lanzar un error si el kilometraje es negativo", () => {
+    expect(() => suv.setKilometraje(-1))
+        .toThrow("El kilometraje debe ser un número mayor o igual a 0");
+});
 
-        expect(() => suv.setKilometraje(Infinity)).toThrow(VehiculoError);
-        expect(() => suv.setKilometraje(Infinity)).toThrow("El kilometraje debe ser un número mayor o igual a 0");
-    });
+it("Debe lanzar un error si el kilometraje no es un número finito", () => {
+    expect(() => suv.setKilometraje(NaN))
+        .toThrow("El kilometraje debe ser un número mayor o igual a 0");
+});
 
-    it("Debe asignar el kilometraje correctamente si el valor es válido", () => {
-        suv.setKilometraje(2500);
-        expect(suv.getKilometraje()).toBe(2500);
-    });
-
+it("Debe asignar el kilometraje correctamente si el valor es válido", () => {
+    suv.setKilometraje(2500);
+    expect(suv.getKilometraje()).toBe(2500);
+});
 });

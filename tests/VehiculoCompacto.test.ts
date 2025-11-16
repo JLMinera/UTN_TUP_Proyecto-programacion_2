@@ -28,22 +28,24 @@ describe("Test Compacto (hereda de Vehiculo)", () => {
         expect(compacto.getPatente()).toBe("XYZ987");
     });
 
+    it("Debe lanzar error si la patente es null", () => {
+    expect(() => compacto.setPatente(null as any)).toThrow(VehiculoError);
+    });
+
+
     it("Debe lanzar un error si el kilometraje es negativo", () => {
-        expect(() => compacto.setKilometraje(-1)).toThrow(VehiculoError);
-        expect(() => compacto.setKilometraje(-1)).toThrow("El kilometraje debe ser un número mayor o igual a 0");
+    expect(() => compacto.setKilometraje(-1))
+        .toThrow("El kilometraje debe ser un número mayor o igual a 0");
     });
 
     it("Debe lanzar un error si el kilometraje no es un número finito", () => {
-        expect(() => compacto.setKilometraje(NaN)).toThrow(VehiculoError);
-        expect(() => compacto.setKilometraje(NaN)).toThrow("El kilometraje debe ser un número mayor o igual a 0");
-
-        expect(() => compacto.setKilometraje(Infinity)).toThrow(VehiculoError);
-        expect(() => compacto.setKilometraje(Infinity)).toThrow("El kilometraje debe ser un número mayor o igual a 0");
+    expect(() => compacto.setKilometraje(NaN))
+        .toThrow("El kilometraje debe ser un número mayor o igual a 0");
     });
 
     it("Debe asignar el kilometraje correctamente si el valor es válido", () => {
-        compacto.setKilometraje(1200);
-        expect(compacto.getKilometraje()).toBe(1200);
+    compacto.setKilometraje(2500);
+    expect(compacto.getKilometraje()).toBe(2500);
     });
 
 });

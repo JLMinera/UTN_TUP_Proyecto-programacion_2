@@ -1,4 +1,4 @@
-import RegistroOperacion from "../src/clases/RegistroOperacion"
+import RegistroOperacion from "../src/clases/Reportes/RegistroOperacion"
 
 describe("Inventario", () => {
 

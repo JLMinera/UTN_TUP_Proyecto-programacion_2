@@ -1,5 +1,5 @@
 import EstadoError from "../../clasesDeError/EstadoError";
-import GestorDeVehiculo from "../GestorDeVehiculo";
+import GestorDeVehiculo from "../Gestores/GestorDeVehiculo";
 import Cliente from "../Personas/Cliente";
 import EstadoReservado from "./EstadoReservado";
 import Estados from "./Estados";

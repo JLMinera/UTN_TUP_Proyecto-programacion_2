@@ -1,5 +1,5 @@
 import CalculadoraDeTarifa from "../src/clases/Calculadoras/CalculadoraDeTarifa";
-import GestorDeVehiculo from "../src/clases/GestorDeVehiculo";
+import GestorDeVehiculo from "../src/clases/Gestores/GestorDeVehiculo";
 import CalculadoraError from "../src/clasesDeError/CalculadoraError";
 
 class CalculadoraDeTarifaTest extends CalculadoraDeTarifa {

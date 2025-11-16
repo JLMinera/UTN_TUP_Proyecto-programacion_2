@@ -1,5 +1,5 @@
+import GestorDeVehiculo from "../Gestores/GestorDeVehiculo";
 import CalculadoraDeTarifa from "./CalculadoraDeTarifa";
-import GestorDeVehiculo from "../GestorDeVehiculo";
 
 /**
  * Calculadora para vehículos compactos.
