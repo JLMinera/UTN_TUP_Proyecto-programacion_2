@@ -90,14 +90,14 @@ export default class Inventario {
 
     public vehiculoMenosAlquilado(fechaInicio: Date, fechaFin: Date): string {
         let minPatente: string = "";
-        let minCantidad = 0;
+        let minCantidad = Infinity;
 
         for (const [patente, operaciones] of this.vehiculosEnAlquiler) {
             const cantidad = operaciones.filter(op =>
                 op.getFecha() >= fechaInicio && op.getFecha() <= fechaFin
             ).length;
 
-            if (cantidad === 0 || cantidad < minCantidad) {
+            if (cantidad <= minCantidad) {
                 minCantidad = cantidad;
                 minPatente = patente;
             }
