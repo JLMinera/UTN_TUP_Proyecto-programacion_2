@@ -71,7 +71,18 @@ export default class EstadoReservado extends Estados {
      * @param fecha - Fecha en que se registra la entrada a mantenimiento.
      */
     public enviarMantenimiento(gestorVehiculo: GestorDeVehiculo, costo: number, fecha: Date): void {
-        gestorVehiculo.setEstado(new EstadoMantenimiento(costo, fecha));
+        const ultimoMantenimientoKm = gestorVehiculo.getKilometrajeActual() - gestorVehiculo.getUltimoKmMantenimiento();
+        const fechaActual = new Date();
+
+        const meses =
+            (fechaActual.getFullYear() - gestorVehiculo.getFechaUltimoMantenimiento().getFullYear()) * 12 +
+            (fechaActual.getMonth() - gestorVehiculo.getFechaUltimoMantenimiento().getMonth());
+
+        const alquileres = gestorVehiculo.getContadorAcumulado() % 5;
+
+        if (ultimoMantenimientoKm > 10000 || meses > 12 || alquileres === 0) {
+            gestorVehiculo.setEstado(new EstadoMantenimiento(costo, fecha));
+        }
     }
 
     /**
