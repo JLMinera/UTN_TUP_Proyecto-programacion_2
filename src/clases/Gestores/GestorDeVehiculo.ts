@@ -69,7 +69,12 @@ export default class GestorDeVehiculo {
 
     /** Transición de estado → Disponible. */
     public enviarDisponible(): void {
-        this.estado.enviarDisponible(this);
+        try {
+            this.estado.enviarDisponible(this);
+        } catch(error) {
+            throw new GestorDeVehiculoError("Vehiculo no se puede enviar a Disponible");
+        }
+        
     }
 
     /**
@@ -77,34 +82,35 @@ export default class GestorDeVehiculo {
      * Incrementa el contador de reservas.
      */
     public enviarReservar(cliente: Cliente, fechaInicio: Date, fechaFin: Date): void {
-        this.estado.enviarReservar(this, cliente, fechaInicio, fechaFin);
-        this.contadorAcumulado();
+        try {
+           this.estado.enviarReservar(this, cliente, fechaInicio, fechaFin);
+            this.contadorAcumulado();
+        } catch(error) {
+            throw new GestorDeVehiculoError("Vehiculo no se puede enviar a Reservado");
+        }
     }
 
     /**
-     * Evalúa si corresponde pasar el vehículo a Mantenimiento o NecesitaLimpieza.
-     * 
-     * Criterios:
-     * - Más de 10.000 km desde el último mantenimiento.
-     * - Más de 12 meses desde el último mantenimiento.
-     * - Cada 5 reservas.
+     * Transición de estado → Mantenimiento.
      */
-    public dispararMantenimiento(costo: number, distanciaRecorrida: number, fecha: Date): void {
-        const ultimoMantenimientoKm = this.getKilometrajeActual() - this.getUltimoKmMantenimiento();
-        const fechaActual = new Date();
-
-        const meses =
-            (fechaActual.getFullYear() - this.getFechaUltimoMantenimiento().getFullYear()) * 12 +
-            (fechaActual.getMonth() - this.getFechaUltimoMantenimiento().getMonth());
-
-        const alquileres = this.getContadorAcumulado() % 5;
-
-        if (ultimoMantenimientoKm > 10000 || meses > 12 || alquileres === 0) {
+    public enviarMantenimiento(costo: number, fecha: Date): void {
+        try {
             this.estado.enviarMantenimiento(this, costo, fecha);
             this.setFechaUltimoMantenimiento(this.estado.getFecha());
             this.setUltimoKmMantenimiento(this.getKilometrajeActual());
-        } else {
-            this.estado.enviarNecesitaLimpieza(this, distanciaRecorrida, fecha);
+        } catch(error) {
+            throw new GestorDeVehiculoError("Vehiculo no se puede enviar a Mantenimiento");
+        }
+    }
+
+    /**
+     * Transición de estado → Necesita Limpieza.
+     */
+    public enviarNecesitaLimpieza(distanciaRecorrida: number, fecha: Date) {
+        try {
+           this.estado.enviarNecesitaLimpieza(this, distanciaRecorrida, fecha);
+        } catch(error) {
+            throw new GestorDeVehiculoError("Vehiculo no se puede enviar a Necesita Limpieza");
         }
     }
 

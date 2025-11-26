@@ -69,7 +69,7 @@ export default class Inventario {
      */
     public registrarMantenimiento(vehiculo: GestorDeVehiculo, costo: number, distanciaRecorrida: number, fecha: Date) {
         try {
-            vehiculo.dispararMantenimiento(costo, distanciaRecorrida, fecha);
+            vehiculo.enviarMantenimiento(costo, fecha);
 
             const operacion = new RegistroOperacion(fecha, costo);
 
