@@ -251,7 +251,8 @@ class GestorDeVehiculo {
     + GestorDeVehiculo(vehiculo: Vehiculo, calculadora: CalculadoraDeTarifa, tarifaBase: number, adicionalPorKm: number, limiteDiarioKm: number, seguro: number)
     + enviarDisponible(): void
     + enviarReservar(cliente: Cliente, fechaInicio: Date, fechaFin: Date): void
-    + dispararMantenimiento(costo: number, distanciaRecorrida: number, fecha: Date): void
+    + enviarMantenimiento(costo: number, fecha: Date): void
+    + enviarNecesitaLimpieza(distanciaRecorrida: number, fecha: Date): void
     + setEstado(data: Estados): void
     + getEstado(): Estados
     + setUltimoKmMantenimiento(data: number): void

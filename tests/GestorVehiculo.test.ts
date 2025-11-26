@@ -67,7 +67,8 @@ describe("GestorDeVehiculo - Tests completos", () => {
     expect(gestor.getContadorAcumulado()).toBe(1);
   });
 
-  it("dispararMantenimiento llama a enviarMantenimiento si km alto y estado Reservado", () => {
+
+  it("enviarMantenimiento llama al estado si cumple las condiciones, como si km alto y estado Reservado", () => {
     const fechaInicio = new Date("2025-01-01");
     const fechaFin = new Date("2025-01-10");
     const estadoReservado = new EstadoReservado(cliente, fechaInicio, fechaFin);
@@ -81,12 +82,13 @@ describe("GestorDeVehiculo - Tests completos", () => {
     for (let i = 0; i < 5; i++) gestor.contadorAcumulado();
 
     const fecha = new Date();
-    gestor.dispararMantenimiento(500, 100, fecha);
+    gestor.enviarMantenimiento(500, fecha);
 
     expect(enviarMantenimientoSpy).toHaveBeenCalled();
   });
 
-  it("dispararMantenimiento llama a enviarNecesitaLimpieza si no se cumplen condiciones de mantenimiento", () => {
+
+  it("enviarNecesitaLimpieza llama a enviarNecesitaLimpieza si no se cumplen condiciones de mantenimiento", () => {
     const fechaInicio = new Date("2025-01-01");
     const fechaFin = new Date("2025-01-10");
     const estadoReservado = new EstadoReservado(cliente, fechaInicio, fechaFin);
@@ -100,11 +102,12 @@ describe("GestorDeVehiculo - Tests completos", () => {
     gestor.contadorAcumulado();
 
     const fecha = new Date();
-    gestor.dispararMantenimiento(500, 100, fecha);
+    gestor.enviarNecesitaLimpieza(500, fecha);
 
     expect(enviarNecesitaLimpiezaSpy).toHaveBeenCalled();
   });
-  
+
+
   it("setUltimoKmMantenimiento acepta valores válidos", () => {
   gestor.setUltimoKmMantenimiento(500);
   expect(gestor.getUltimoKmMantenimiento()).toBe(500);

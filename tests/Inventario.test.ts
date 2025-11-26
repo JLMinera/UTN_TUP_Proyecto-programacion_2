@@ -65,9 +65,9 @@ describe("Inventario - Tests con gestores y vehículos", () => {
   });
 
   it("registrarMantenimiento funciona con gestores reales y registra operación", () => {
-    const spyMantenimiento = jest.spyOn(gestorSedan, "dispararMantenimiento");
+    const spyMantenimiento = jest.spyOn(gestorSedan, "enviarMantenimiento");
     inventario.registrarMantenimiento(gestorSedan, 500, 100, fechaMantenimiento);
-    expect(spyMantenimiento).toHaveBeenCalledWith(500, 100, fechaMantenimiento);
+    expect(spyMantenimiento).toHaveBeenCalledWith(500, fechaMantenimiento);
   });
 
   it("porcentajeVehiculosAlquilados calcula correctamente con múltiples vehículos y fechas hardcodeadas", () => {
